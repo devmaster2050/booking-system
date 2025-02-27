@@ -1,0 +1,3163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financial Area</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      .sidebar {
+        height: 100vh;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: linear-gradient(135deg, #140303, #007bff);
+        padding-top: 20px;
+        color: white;
+        z-index: 2;
+        overflow-y: auto;
+      }
+
+      .sidebar a {
+        text-decoration: none;
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        display: block;
+        color: white;
+        border-radius: 4px;
+      }
+
+      .sidebar a:hover {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .sidebar-section-title {
+        font-size: 1rem;
+        color: #b0b0b0;
+        padding: 5px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .ms-3 {
+        margin-left: 1rem;
+      }
+
+      .content {
+        margin-left: 260px;
+        padding: 20px;
+      }
+
+      /* Clickable blocks for main Financial Area sections */
+      .fin-blocks {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .fin-block {
+        background-color: #e7e7e7;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        flex: 1;
+        min-width: 120px;
+        transition: background-color 0.3s;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .fin-block:hover {
+        background-color: #d0d0d0;
+      }
+
+      /* Active block highlight */
+      .fin-block.active {
+        background-color: #007bff;
+        color: white;
+      }
+
+      /* Hide all main sections by default */
+      .fin-section {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .fin-section.active {
+        display: block;
+      }
+
+      /* Payroll sub-blocks styling */
+      .payroll-sub-blocks {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .payroll-sub-block {
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        flex: 1;
+        min-width: 120px;
+        transition: background-color 0.3s;
+        font-weight: bold;
+        color: #333;
+      }
+      .payroll-sub-block:hover {
+        background-color: #dcdcdc;
+      }
+      .payroll-sub-block.active {
+        background-color: #28a745;
+        color: white;
+      }
+      .payroll-navigation a {
+        text-decoration: none;
+        font-size: 1rem;
+        padding: 8px 15px;
+        display: inline-block;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .payroll-navigation a.active,
+      .payroll-navigation a:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      /* Forms styling */
+      .form-section {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .form-section h6 {
+        margin-bottom: 15px;
+        color: #007bff;
+      }
+
+      /* Child Information */
+      .child-info {
+        padding: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-color: #f8f9fa;
+      }
+
+      .remove-child-btn {
+        margin-top: 10px;
+      }
+
+      /* Accordion Box Styling */
+      .accordion-button::after {
+        transition: transform 0.2s;
+      }
+
+      .accordion-button.collapsed::after {
+        transform: rotate(0deg);
+      }
+
+      .accordion-button:not(.collapsed)::after {
+        transform: rotate(180deg);
+      }
+    </style>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Main Sidebar -->
+    <div class="sidebar d-flex flex-column justify-content-between">
+      <div>
+        <!-- Home -->
+        <a href="index.html" class="sidebar-link"
+          ><i class="fas fa-home me-2"></i>Home</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Product Area -->
+        <div class="sidebar-section-title">Product Area</div>
+        <a href="product-area.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-plus"></i> New Experience</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Tours Section -->
+        <div class="sidebar-section-title">Tours</div>
+        <a href="tour-management.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-plus"></i> Add a New Tour</a
+        >
+        <a href="available-tours.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>Available Tours</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Bookings Section -->
+        <div class="sidebar-section-title">Travel Agent Area</div>
+        <a href="create-booking.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-calendar-check"></i> Create Booking</a
+        >
+        <a href="view-bookings.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>View Bookings</a
+        >
+
+        <div class="mt-5"></div>
+
+        <!-- External Booking Section -->
+        <div class="sidebar-section-title">Customers Portal</div>
+        <a href="external-booking.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-ticket"></i> Book a tour</a
+        >
+        <a href="available-tours.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>View Tours</a
+        >
+        <a href="my-bookings.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-book"></i> My Bookings</a
+        >
+
+         <!-- Spacing -->
+         <div class="mt-5"></div>
+
+        <!-- New Financial Area Section -->
+        <div class="mt-5"></div>
+        <!-- some spacing -->
+
+        <div class="sidebar-section-title">Financial Area</div>
+        <a href="financial-area.html" class="sidebar-link ms-3"
+          >Financial Area</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+        
+        <!-- Operation Area -->
+        <div class="sidebar-section-title">Operation Area</div>
+        <a href="operation-area.html" class="sidebar-link ms-3">
+          Operation Area
+        </a>
+        <div class="mt-5"></div>
+        <!-- Employee Portal -->
+        <div class="sidebar-section-title">Employee Portal</div>
+        <a href="employee-area.html" class="sidebar-link ms-3">
+          <i class="fa-solid fa-user"></i> Employee Area
+        </a>
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <div class="sidebar-section-title">User Area</div>
+
+        <!-- Register/Login or Logout Button -->
+        <button
+          class="btn btn-primary ms-3 mt-3"
+          id="registerBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#registerModal"
+        >
+          Register
+        </button>
+        <button
+          class="btn btn-secondary ms-3 mt-3"
+          id="authBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#loginModal"
+        >
+          Login
+        </button>
+
+        <!-- Welcome Message -->
+        <div id="userWelcome" class="text-center mt-3 text-white">
+          <!-- Content dynamically updated via JavaScript -->
+        </div>
+
+
+
+
+      </div>
+      <div class="text-center mt-auto">
+        <img
+          src="assets/logo.png"
+          alt="Logo"
+          class="img-fluid"
+          style="max-width: 80%; height: auto; margin-bottom: 20px"
+        />
+      </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Register</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Register
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <p class="text-center w-100">
+              Already have an account?
+              <a href="#" id="switchToLogin">Login</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">
+                Login
+              </button>
+              <a
+                href="#"
+                class="text-primary mt-2 d-block"
+                data-bs-toggle="modal"
+                data-bs-target="#forgotPasswordModal"
+                >Forgot Password?</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div
+      class="modal fade"
+      id="forgotPasswordModal"
+      tabindex="-1"
+      aria-labelledby="forgotPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordModalLabel">
+              Forgot Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="forgotPasswordForm">
+              <div class="mb-3">
+                <label for="forgotEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="forgotEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your registered email"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Send Reset Link
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div
+      class="modal fade"
+      id="resetPasswordModal"
+      tabindex="-1"
+      aria-labelledby="resetPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resetPasswordModalLabel">
+              Reset Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="resetPasswordForm">
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  class="form-control"
+                  placeholder="Enter your new password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Reset Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="mainContent">
+      <div class="container-fluid">
+        <div class="card shadow border-0 mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Financial Area</h4>
+          </div>
+          <div class="card-body">
+            <!-- Clickable Blocks for Financial Area Sections -->
+            <div class="fin-blocks mb-4">
+              <div class="fin-block" data-section="revenueSection">Revenue</div>
+              <div class="fin-block" data-section="invoicesSection">
+                Generated Invoices
+              </div>
+              <div class="fin-block" data-section="payrollSection">Payroll</div>
+              <div class="fin-block" data-section="costCenterSection">
+                Cost Center
+              </div>
+              <div class="fin-block" data-section="reportingSection">
+                Reporting
+              </div>
+              <!-- New clickable blocks -->
+              <div class="fin-block" data-section="marginsModuleSection">Margins Module</div>
+              <div class="fin-block" data-section="otaMarginsSection">OTA Margins</div>
+            </div>
+
+            <!-- Revenue Section -->
+            <div id="revenueSection" class="fin-section">
+              <div
+                id="revenueMessage"
+                class="text-danger mb-3"
+                style="display: none"
+              ></div>
+              <table id="revenueTable" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Tour Name</th>
+                    <th>Guide Rate (CHF)</th>
+                    <th>Ticket Cost (CHF)</th>
+                    <th>Vehicle/Driver Cost (CHF)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <!-- NEW: Revenue Calculator -->
+              <div id="revenueCalculator" class="mt-4">
+                <h5>Revenue Calculator</h5>
+                <div class="mb-3">
+                  <strong>Tour: </strong><span id="revTourName">[Tour Name]</span> |
+                  <strong>Duration: </strong><span id="revTourDuration">[Duration]</span> hours
+                </div>
+                <!-- Tabs for different cities (if applicable) -->
+                <ul class="nav nav-tabs" id="revenueCityTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link active"
+                      id="city-tab-default"
+                      data-bs-toggle="tab"
+                      href="#cityDefault"
+                      role="tab"
+                      >Default City</a
+                    >
+                  </li>
+                  <!-- Additional city tabs can be generated dynamically -->
+                </ul>
+                <div class="tab-content mt-3" id="revenueCityContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="cityDefault"
+                    role="tabpanel"
+                  >
+                    <!-- Fixed Costs -->
+                    <h6>Fixed Costs</h6>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>Guide Cost</td>
+                          <td id="guideCost">CHF 0</td>
+                        </tr>
+                        <tr>
+                          <td>Driver Cost</td>
+                          <td id="driverCost">CHF 0</td>
+                        </tr>
+                        <tr>
+                          <td>Total Fixed Cost</td>
+                          <td id="totalFixedCost">CHF 0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- Fixed Cost Mark-up & Earnings -->
+                    <h6>Fixed Cost Mark-up &amp; Earnings</h6>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>Fixed Cost Mark-up Total</td>
+                          <td id="fixedCostMarkup">CHF 0</td>
+                        </tr>
+                        <tr>
+                          <td>Earnings</td>
+                          <td id="earnings">CHF 0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- Product Costs -->
+                    <h6>Product Costs</h6>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Individual</th>
+                          <th>Bulk</th>
+                          <th>Child</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Cost from Product</td>
+                          <td id="indivCost">CHF 0</td>
+                          <td id="bulkCost">CHF 0</td>
+                          <td id="childCost">CHF 0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- Retail Prices -->
+                    <h6>Retail Prices</h6>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>Total Retail Price</td>
+                          <td id="totalRetailPrice">CHF 0</td>
+                        </tr>
+                        <tr>
+                          <td>Total Retail Price Per Person</td>
+                          <td id="retailPricePerPerson">CHF 0</td>
+                        </tr>
+                        <tr>
+                          <td>Child Retail Price</td>
+                          <td id="childRetailPrice">CHF 0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- OTA Prices -->
+                    <h6>OTA Prices</h6>
+                    <div id="otaPrices">
+                      <div class="card mb-3">
+                        <div class="card-header">OTA 1</div>
+                        <div class="card-body">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td>OTA 1 Price Total</td>
+                                <td id="ota1PriceTotal">CHF 0</td>
+                              </tr>
+                              <tr>
+                                <td>OTA 1 Price Per Person</td>
+                                <td id="ota1PricePerPerson">CHF 0</td>
+                              </tr>
+                              <tr>
+                                <td>OTA 1 Child Price</td>
+                                <td id="ota1ChildPrice">CHF 0</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <!-- Additional OTA sections can be generated here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End of Revenue Calculator -->
+            </div>
+            <!-- End of Revenue Section -->
+
+            <!-- Invoice Center Section -->
+            <div id="invoicesSection" class="fin-section">
+              <ul class="nav nav-tabs" id="invoiceCenterTabs" role="tablist">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="outstanding-invoices-tab"
+                    data-bs-toggle="tab"
+                    href="#outstandingInvoices"
+                    role="tab"
+                    >Outstanding Invoices</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="settled-invoices-tab"
+                    data-bs-toggle="tab"
+                    href="#settledInvoices"
+                    role="tab"
+                    >Invoices Settled</a
+                  >
+                </li>
+              </ul>
+              <div class="tab-content mt-3" id="invoiceCenterContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="outstandingInvoices"
+                  role="tabpanel"
+                >
+                  <table id="outstandingInvoicesTable" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Tour Name</th>
+                        <th>Participants</th>
+                        <th>Total Price (incl. VAT)</th>
+                        <th>Account</th>
+                        <th>Deposit Payment (Amount &amp; Date)</th>
+                        <th>Final Payment (Amount &amp; Date)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Example Tour</td>
+                        <td>10</td>
+                        <td>CHF 1000</td>
+                        <td>Account 1</td>
+                        <td>CHF 200 on 2025-01-01</td>
+                        <td>CHF 800 on 2025-01-15</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="settledInvoices"
+                  role="tabpanel"
+                >
+                  <table id="settledInvoicesTable" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Tour Name</th>
+                        <th>Participants</th>
+                        <th>Total Price (incl. VAT)</th>
+                        <th>Account</th>
+                        <th>Payment Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Settled Tour</td>
+                        <td>8</td>
+                        <td>CHF 800</td>
+                        <td>Account 2</td>
+                        <td>2025-02-01</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- End of Invoice Center Section -->
+
+            <!-- Payroll Section -->
+            <div id="payrollSection" class="fin-section">
+              <!-- Clickable Blocks for Payroll Sub-Sections -->
+              <div class="payroll-sub-blocks">
+                <div class="payroll-sub-block" data-subsection="employees">
+                  Employees
+                </div>
+                <div class="payroll-sub-block" data-subsection="company">
+                  Company
+                </div>
+                <div class="payroll-sub-block" data-subsection="salarySlip">
+                  Salary Slip
+                </div>
+                <!-- New Payroll Sub-Block for Statistics -->
+                <div class="payroll-sub-block" data-subsection="statistics">
+                  Statistics
+                </div>
+              </div>
+
+              <!-- Integrated Payroll Navigation -->
+              <div class="payroll-navigation" id="payrollNavigation"></div>
+
+              <!-- Payroll Content Area -->
+              <div class="payroll-content" id="payrollContent">
+                <!-- Employees Sub-Section -->
+                <div
+                  id="employeesSection"
+                  class="payroll-sub-section"
+                  style="display: none"
+                >
+                  <!-- Personal Information Sub-Section -->
+                  <div id="personalInfoSection" class="form-section">
+                    <form id="personalInfoForm">
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="lastName" class="form-label">Last Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="lastName"
+                            name="lastName"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="firstName" class="form-label">First Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="firstName"
+                            name="firstName"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <label for="gender" class="form-label">Gender</label>
+                          <select
+                            class="form-control"
+                            id="gender"
+                            name="gender"
+                            required
+                          >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <label for="dob" class="form-label"
+                            >Date of Birth</label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="dob"
+                            name="dob"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label for="nationality" class="form-label"
+                            >Nationality</label
+                          >
+                          <select
+                            class="form-control"
+                            id="nationality"
+                            name="nationality"
+                            required
+                          >
+                            <option value="">Select Nationality</option>
+                            <option value="Switzerland">Switzerland</option>
+                            <option value="USA">USA</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="stayPermitCategory" class="form-label"
+                            >Stay Permit Category</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="stayPermitCategory"
+                            name="stayPermitCategory"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="settledDownValidFrom" class="form-label"
+                            >Settled Down Valid From</label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="settledDownValidFrom"
+                            name="settledDownValidFrom"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="language" class="form-label"
+                            >Language</label
+                          >
+                          <select
+                            class="form-control"
+                            id="language"
+                            name="language"
+                            required
+                          >
+                            <option value="">Select Language</option>
+                            <option value="German">German</option>
+                            <option value="English">English</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="maritalStatus" class="form-label"
+                            >Marital Status</label
+                          >
+                          <select
+                            class="form-control"
+                            id="maritalStatus"
+                            name="maritalStatus"
+                            required
+                          >
+                            <option value="">Select Marital Status</option>
+                            <option value="Single">Single</option>
+                            <option value="Separated">Separated</option>
+                            <option value="Married">Married</option>
+                            <option value="Widowed">Widowed</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="maritalStatusValidFrom" class="form-label"
+                            >Marital Status Valid From</label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="maritalStatusValidFrom"
+                            name="maritalStatusValidFrom"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label
+                            for="retirementInsuranceNumber"
+                            class="form-label"
+                            >Retirement Insurance Number</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="retirementInsuranceNumber"
+                            name="retirementInsuranceNumber"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="email" class="form-label">Email</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="phoneNumber" class="form-label"
+                            >Phone Number</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Child Information Section -->
+                      <div id="childrenContainer">
+                        <h6>Children</h6>
+                        <!-- Child Info will be appended here -->
+                      </div>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="addChildBtn"
+                      >
+                        Add a New Child
+                      </button>
+                    </form>
+                  </div>
+
+                  <!-- Employment Sub-Section -->
+                  <div
+                    id="employmentSection"
+                    class="form-section"
+                    style="display: none"
+                  >
+                    <form id="employmentForm">
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="entryDate" class="form-label"
+                            >Entry Date</label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="entryDate"
+                            name="entryDate"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="withdrawalDate" class="form-label"
+                            >Withdrawal Date</label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="withdrawalDate"
+                            name="withdrawalDate"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="employmentContract" class="form-label"
+                            >Employment Contract</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="employmentContract"
+                            name="employmentContract"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Working Time</label>
+                          <div>
+                            <div class="form-check form-check-inline">
+                              <input
+                                class="form-check-input"
+                                type="radio"
+                                name="workingTime"
+                                id="regularWorkingTime"
+                                value="Regular"
+                                required
+                              />
+                              <label
+                                class="form-check-label"
+                                for="regularWorkingTime"
+                                >Regular</label
+                              >
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input
+                                class="form-check-input"
+                                type="radio"
+                                name="workingTime"
+                                id="irregularWorkingTime"
+                                value="Irregular"
+                                required
+                              />
+                              <label
+                                class="form-check-label"
+                                for="irregularWorkingTime"
+                                >Irregular</label
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <label for="employmentLevel" class="form-label"
+                            >Employment Level (%)</label
+                          >
+                          <select
+                            class="form-control"
+                            id="employmentLevel"
+                            name="employmentLevel"
+                            required
+                          >
+                            <option value="">Select Level</option>
+                            <option value="0">0%</option>
+                            <option value="10">10%</option>
+                            <option value="20">20%</option>
+                            <option value="30">30%</option>
+                            <option value="40">40%</option>
+                            <option value="50">50%</option>
+                            <option value="60">60%</option>
+                            <option value="70">70%</option>
+                            <option value="80">80%</option>
+                            <option value="90">90%</option>
+                            <option value="100">100%</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <label for="monthlyWages" class="form-label"
+                            >Monthly Wages (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="monthlyWages"
+                            name="monthlyWages"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label for="workplace" class="form-label"
+                            >Workplace</label
+                          >
+                          <select
+                            class="form-control"
+                            id="workplace"
+                            name="workplace"
+                            required
+                          >
+                            <option value="">Select Workplace</option>
+                            <option value="Head Office">Head Office</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="employeeNumber" class="form-label"
+                            >Employee Number</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="employeeNumber"
+                            name="employeeNumber"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="effectiveVacationDays" class="form-label"
+                            >Effective Vacation Days</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="effectiveVacationDays"
+                            name="effectiveVacationDays"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="vacationDays100" class="form-label"
+                            >Vacation Days on 100% Workload</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="vacationDays100"
+                            name="vacationDays100"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="hoursPerWeek" class="form-label"
+                            >Hours per Week</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="hoursPerWeek"
+                            name="hoursPerWeek"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="lessonsPerWeek" class="form-label"
+                            >Lessons per Week</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="lessonsPerWeek"
+                            name="lessonsPerWeek"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Bank Details Sub-Section -->
+                  <div
+                    id="bankDetailsSection"
+                    class="form-section"
+                    style="display: none"
+                  >
+                    <form id="bankDetailsForm">
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <label for="bankInstitution" class="form-label"
+                            >Name of the Institution</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="bankInstitution"
+                            name="bankInstitution"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label for="iban" class="form-label">IBAN</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="iban"
+                            name="iban"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label for="bic" class="form-label">BIC</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="bic"
+                            name="bic"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="paymentGroup" class="form-label"
+                            >Payment Group</label
+                          >
+                          <select
+                            class="form-control"
+                            id="paymentGroup"
+                            name="paymentGroup"
+                            required
+                          >
+                            <option value="">Select Payment Group</option>
+                            <!-- Options can be added here in the future -->
+                          </select>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Insurance Sub-Section -->
+                  <div
+                    id="insuranceSection"
+                    class="form-section"
+                    style="display: none"
+                  >
+                    <form id="insuranceForm">
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="ahvExempt"
+                          name="ahvExempt"
+                        />
+                        <label class="form-check-label" for="ahvExempt">
+                          AHV Exempt
+                        </label>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="ahvContributions" class="form-label"
+                            >AHV Contributions at Retirement Age</label
+                          >
+                          <select
+                            class="form-control"
+                            id="ahvContributions"
+                            name="ahvContributions"
+                            required
+                          >
+                            <option value="">Select Contribution</option>
+                            <!-- Options can be added here in the future -->
+                          </select>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">AXA</label>
+                        <div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="axa"
+                              id="uvgGesellschafter"
+                              value="UVG Gesellschafter"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="uvgGesellschafter"
+                              >UVG Gesellschafter</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="axa"
+                              id="uvgPersonal"
+                              value="UVG Personal"
+                              required
+                            />
+                            <label class="form-check-label" for="uvgPersonal"
+                              >UVG Personal</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Occupational Accident</label>
+                        <div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="occupationalAccident"
+                              id="occAccNoContributions"
+                              value="No contributions"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="occAccNoContributions"
+                              >No contributions</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="occupationalAccident"
+                              id="occAccEmployer"
+                              value="Employer"
+                              required
+                            />
+                            <label class="form-check-label" for="occAccEmployer"
+                              >Employer</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label"
+                          >Non-Occupational Accident</label
+                        >
+                        <div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="nonOccupationalAccident"
+                              id="nonOccAccNoContributions"
+                              value="No contributions"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="nonOccAccNoContributions"
+                              >No contributions</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="nonOccupationalAccident"
+                              id="nonOccAccEmployer100"
+                              value="Employer 100%"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="nonOccAccEmployer100"
+                              >Employer 100%</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="nonOccupationalAccident"
+                              id="nonOccAccEmployer50"
+                              value="Employer 50%/100%"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="nonOccAccEmployer50"
+                              >Employer 50%/100%</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <!-- Source Tax Sub-Section -->
+                  <div
+                    id="sourceTaxSection"
+                    class="form-section"
+                    style="display: none"
+                  >
+                    <form id="sourceTaxForm">
+                      <!-- Tax Type Selection -->
+                      <div class="mb-3">
+                        <label class="form-label">Tax Type</label>
+                        <div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="taxType"
+                              id="taxTypeTariffCode"
+                              value="Tariff Code"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="taxTypeTariffCode"
+                              >Tariff Code</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="taxType"
+                              id="taxTypePredefined"
+                              value="Predefined"
+                              required
+                            />
+                            <label
+                              class="form-check-label"
+                              for="taxTypePredefined"
+                              >Predefined</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="taxType"
+                              id="taxTypeOpen"
+                              value="Open"
+                              required
+                            />
+                            <label class="form-check-label" for="taxTypeOpen"
+                              >Open</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Conditional Inputs Based on Tax Type -->
+                      <div
+                        class="mb-3"
+                        id="tariffCodeInput"
+                        style="display: none"
+                      >
+                        <label for="tariffCode" class="form-label"
+                          >Tariff Code</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="tariffCode"
+                          name="tariffCode"
+                        />
+                      </div>
+
+                      <div
+                        class="mb-3"
+                        id="predefinedSelector"
+                        style="display: none"
+                      >
+                        <label for="predefinedTax" class="form-label"
+                          >Predefined Tax</label
+                        >
+                        <select
+                          class="form-control"
+                          id="predefinedTax"
+                          name="predefinedTax"
+                        >
+                          <option value="">Select Predefined Tax</option>
+                          <!-- Options can be added here in the future -->
+                        </select>
+                      </div>
+
+                      <div class="mb-3" id="openInput" style="display: none">
+                        <label for="openTax" class="form-label">Open Tax</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="openTax"
+                          name="openTax"
+                        />
+                      </div>
+
+                      <!-- Religion Selector -->
+                      <div class="mb-3">
+                        <label for="religion" class="form-label"
+                          >Religion</label
+                        >
+                        <select
+                          class="form-control"
+                          id="religion"
+                          name="religion"
+                          required
+                        >
+                          <option value="">Select Religion</option>
+                          <option value="Christian">Christian</option>
+                          <option value="Muslim">Muslim</option>
+                          <option value="Atheist">Atheist</option>
+                        </select>
+                      </div>
+
+                      <!-- Additional Selectors -->
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <label for="typeOfEmployment" class="form-label"
+                            >Type of Employment</label
+                          >
+                          <select
+                            class="form-control"
+                            id="typeOfEmployment"
+                            name="typeOfEmployment"
+                            required
+                          >
+                            <option value="">Select Type of Employment</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <label for="concubinage" class="form-label"
+                            >Concubinage</label
+                          >
+                          <select
+                            class="form-control"
+                            id="concubinage"
+                            name="concubinage"
+                            required
+                          >
+                            <option value="">Select Concubinage</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <label for="furtherEmployment" class="form-label"
+                            >Further Employment</label
+                          >
+                          <select
+                            class="form-control"
+                            id="furtherEmployment"
+                            name="furtherEmployment"
+                            required
+                          >
+                            <option value="">Select Further Employment</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Pension Checkbox -->
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="pension"
+                          name="pension"
+                        />
+                        <label class="form-check-label" for="pension">
+                          Pension
+                        </label>
+                      </div>
+
+                      <!-- Place of Residence Abroad Checkbox -->
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="residenceAbroad"
+                          name="residenceAbroad"
+                        />
+                        <label class="form-check-label" for="residenceAbroad">
+                          Place of Residence Abroad
+                        </label>
+                      </div>
+
+                      <!-- Source Tax Canton Radio Buttons -->
+                      <div class="mb-3">
+                        <label class="form-label">Source Tax Canton</label>
+                        <div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="sourceTaxCanton"
+                              id="residentWeekly"
+                              value="Resident (weekly)"
+                              required
+                            />
+                            <label class="form-check-label" for="residentWeekly"
+                              >Resident (weekly)</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="radio"
+                              name="sourceTaxCanton"
+                              id="residentOneDay"
+                              value="Resident (one day)"
+                              required
+                            />
+                            <label class="form-check-label" for="residentOneDay"
+                              >Resident (one day)</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Working Days in Switzerland per Month -->
+                      <div class="mb-3">
+                        <label for="workingDays" class="form-label"
+                          >Working Days in Switzerland per Month</label
+                        >
+                        <select
+                          class="form-control"
+                          id="workingDays"
+                          name="workingDays"
+                          required
+                        >
+                          <option value="">
+                            Select Number of Working Days
+                          </option>
+                          <!-- Options from 0 to 20, dynamically generated below -->
+                        </select>
+                      </div>
+
+                      <!-- Address Fields -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="streetAddress" class="form-label"
+                            >Street and House Number</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="streetAddress"
+                            name="streetAddress"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-3">
+                          <label for="zipCode" class="form-label"
+                            >Zip Code</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="zipCode"
+                            name="zipCode"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-3">
+                          <label for="city" class="form-label">City</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="city"
+                            name="city"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="canton" class="form-label">Canton</label>
+                          <select
+                            class="form-control"
+                            id="canton"
+                            name="canton"
+                            required
+                          >
+                            <option value="">Select Canton</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="municipalityNumber" class="form-label"
+                            >Municipality Number</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="municipalityNumber"
+                            name="municipalityNumber"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Additional Personal Details -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="placeOfBirth" class="form-label"
+                            >Place of Birth</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="placeOfBirth"
+                            name="placeOfBirth"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label for="taxIdOrigin" class="form-label"
+                            >Tax ID at the Country of Origin</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="taxIdOrigin"
+                            name="taxIdOrigin"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Cross Border Commuter Since -->
+                      <div class="mb-3">
+                        <label for="commuterSince" class="form-label"
+                          >Cross Border Commuter Since</label
+                        >
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="commuterSince"
+                          name="commuterSince"
+                          required
+                        />
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- End of Employees Sub-Section -->
+
+                <!-- Company Sub-Section -->
+                <div
+                  id="companySection"
+                  class="payroll-sub-section"
+                  style="display: none"
+                >
+                  <div class="payroll-content" id="companyPayrollContent">
+                    <!-- Master Data Sub-Section -->
+                    <div
+                      id="masterDataSection"
+                      class="form-section"
+                      style="display: none"
+                    >
+                      <div class="accordion" id="masterDataAccordion">
+                        <!-- Basic Data -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingBasicData">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseBasicData"
+                              aria-expanded="false"
+                              aria-controls="collapseBasicData"
+                            >
+                              Basic Data
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseBasicData"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingBasicData"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="companyName" class="form-label">Company Name</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="companyName"
+                                    name="companyName"
+                                    required
+                                  />
+                                </div>
+                                <div class="mb-3">
+                                  <label for="registrationNumber" class="form-label">Registration Number</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="registrationNumber"
+                                    name="registrationNumber"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Deputy -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingDeputy">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseDeputy"
+                              aria-expanded="false"
+                              aria-controls="collapseDeputy"
+                            >
+                              Deputy
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseDeputy"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingDeputy"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="deputyName" class="form-label">Deputy Name</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="deputyName"
+                                    name="deputyName"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Workplaces -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingWorkplaces">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseWorkplaces"
+                              aria-expanded="false"
+                              aria-controls="collapseWorkplaces"
+                            >
+                              Workplaces
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseWorkplaces"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingWorkplaces"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="numberOfWorkplaces" class="form-label">Number of Workplaces</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="numberOfWorkplaces"
+                                    name="numberOfWorkplaces"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Source Tax -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingMasterSourceTax">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseMasterSourceTax"
+                              aria-expanded="false"
+                              aria-controls="collapseMasterSourceTax"
+                            >
+                              Source Tax
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseMasterSourceTax"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingMasterSourceTax"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="masterSourceTaxCode" class="form-label">Source Tax Code</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="masterSourceTaxCode"
+                                    name="masterSourceTaxCode"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Payment Settings -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingPaymentSettings">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapsePaymentSettings"
+                              aria-expanded="false"
+                              aria-controls="collapsePaymentSettings"
+                            >
+                              Payment Settings
+                            </button>
+                          </h2>
+                          <div
+                            id="collapsePaymentSettings"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingPaymentSettings"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="paymentMethod" class="form-label">Payment Method</label>
+                                  <select
+                                    class="form-control"
+                                    id="paymentMethod"
+                                    name="paymentMethod"
+                                    required
+                                  >
+                                    <option value="">Select Payment Method</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Cash">Cash</option>
+                                  </select>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Emailing Paystubs -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingEmailingPaystubs">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseEmailingPaystubs"
+                              aria-expanded="false"
+                              aria-controls="collapseEmailingPaystubs"
+                            >
+                              Emailing Paystubs
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseEmailingPaystubs"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingEmailingPaystubs"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="paystubEmailTemplate" class="form-label">Email Template</label>
+                                  <textarea
+                                    class="form-control"
+                                    id="paystubEmailTemplate"
+                                    name="paystubEmailTemplate"
+                                    rows="4"
+                                    required
+                                  ></textarea>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Other -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingOther">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseOther"
+                              aria-expanded="false"
+                              aria-controls="collapseOther"
+                            >
+                              Other
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseOther"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingOther"
+                            data-bs-parent="#masterDataAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="additionalInfo" class="form-label">Additional Information</label>
+                                  <textarea
+                                    class="form-control"
+                                    id="additionalInfo"
+                                    name="additionalInfo"
+                                    rows="4"
+                                  ></textarea>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Insurances Sub-Section -->
+                    <div
+                      id="insurancesSection"
+                      class="form-section"
+                      style="display: none"
+                    >
+                      <div class="accordion" id="insurancesAccordion">
+                        <!-- OASI, EO, DI, ALV - Social Insurances -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingSocialInsurances">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseSocialInsurances"
+                              aria-expanded="false"
+                              aria-controls="collapseSocialInsurances"
+                            >
+                              OASI, EO, DI, ALV - Social Insurances
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseSocialInsurances"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingSocialInsurances"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="socialInsurancesRate" class="form-label">Insurance Rate (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="socialInsurancesRate"
+                                    name="socialInsurancesRate"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- FCF - Compensation Fund -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingFCF">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseFCF"
+                              aria-expanded="false"
+                              aria-controls="collapseFCF"
+                            >
+                              FCF - Compensation Fund
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseFCF"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingFCF"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="fcfContribution" class="form-label">FCF Contribution (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="fcfContribution"
+                                    name="fcfContribution"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- PP - Occupational Benefit Plan -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingOccupationalBenefitPlan">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseOccupationalBenefitPlan"
+                              aria-expanded="false"
+                              aria-controls="collapseOccupationalBenefitPlan"
+                            >
+                              PP - Occupational Benefit Plan
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseOccupationalBenefitPlan"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingOccupationalBenefitPlan"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="occupationalBenefitRate" class="form-label">Benefit Rate (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="occupationalBenefitRate"
+                                    name="occupationalBenefitRate"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Al - Accident Insurance -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingAccidentInsurance">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseAccidentInsurance"
+                              aria-expanded="false"
+                              aria-controls="collapseAccidentInsurance"
+                            >
+                              Al - Accident Insurance
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseAccidentInsurance"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingAccidentInsurance"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="accidentInsuranceRate" class="form-label">Insurance Rate (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="accidentInsuranceRate"
+                                    name="accidentInsuranceRate"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- AAI - Additional Accident Insurance -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingAdditionalAccidentInsurance">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseAdditionalAccidentInsurance"
+                              aria-expanded="false"
+                              aria-controls="collapseAdditionalAccidentInsurance"
+                            >
+                              AAI - Additional Accident Insurance
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseAdditionalAccidentInsurance"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingAdditionalAccidentInsurance"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="additionalAccidentRate" class="form-label">Additional Accident Rate (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="additionalAccidentRate"
+                                    name="additionalAccidentRate"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- DSP - Daily Sick Pay -->
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingDailySickPay">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseDailySickPay"
+                              aria-expanded="false"
+                              aria-controls="collapseDailySickPay"
+                            >
+                              DSP - Daily Sick Pay
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseDailySickPay"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingDailySickPay"
+                            data-bs-parent="#insurancesAccordion"
+                          >
+                            <div class="accordion-body">
+                              <form>
+                                <div class="mb-3">
+                                  <label for="dailySickPayRate" class="form-label">Daily Sick Pay Rate (%)</label>
+                                  <input
+                                    type="number"
+                                    class="form-control"
+                                    id="dailySickPayRate"
+                                    name="dailySickPayRate"
+                                    required
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Wage Types Sub-Section -->
+                    <div
+                      id="wageTypesSection"
+                      class="form-section"
+                      style="display: none"
+                    >
+                      <form id="wageTypesForm">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Number</th>
+                              <th>Description</th>
+                              <th>Account Credit</th>
+                              <th>Account Debit</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>9061</td>
+                              <td>PP wages</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <td>9062</td>
+                              <td>PP premium Swiss Life employee</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <td>9063</td>
+                              <td>PP premium Swiss Life employer</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <td>9065</td>
+                              <td>PP owed</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </div>
+                    <!-- Account Plan Sub-Section -->
+                    <div
+                      id="accountPlanSection"
+                      class="form-section"
+                      style="display: none"
+                    >
+                      <form id="accountPlanForm">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Acct</th>
+                              <th>Description</th>
+                              <th>Financial Accounting Accounts Plan Adjustment</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>1020</td>
+                              <td>Bank</td>
+                              <td>PostFinance CHF Account</td>
+                            </tr>
+                            <tr>
+                              <td>1090</td>
+                              <td>Transfer account</td>
+                              <td>Transfer account</td>
+                            </tr>
+                            <tr>
+                              <td>1091</td>
+                              <td>Salary pass-through account</td>
+                              <td>Transitory account</td>
+                            </tr>
+                            <tr>
+                              <td>1183</td>
+                              <td>Accident insurance</td>
+                              <td>CA Accident insurance</td>
+                            </tr>
+                            <tr>
+                              <td>1184</td>
+                              <td>Per diem sickness allowance</td>
+                              <td>CA Sick pay insurance</td>
+                            </tr>
+                            <tr>
+                              <td>1188</td>
+                              <td>Withholding tax</td>
+                              <td>CA Source taxation</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- End of Company Sub-Section -->
+
+                <!-- Salary Slip Sub-Section (Placeholder) -->
+                <div
+                  id="salarySlipSection"
+                  class="payroll-sub-section"
+                  style="display: none"
+                >
+                  <p>
+                    Salary Slips will appear here..
+                  </p>
+                </div>
+
+                <!-- New: Payroll Statistics Sub-Section -->
+                <div
+                  id="payrollStatisticsSection"
+                  class="payroll-sub-section"
+                  style="display: none"
+                >
+                  <h5>Payroll Statistics</h5>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Description</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Employees Currently Working</td>
+                        <td id="currentEmployees">0</td>
+                      </tr>
+                      <tr>
+                        <td>Average Salary (Guides)</td>
+                        <td id="avgSalaryGuides">CHF 0</td>
+                      </tr>
+                      <tr>
+                        <td>Average Salary (Drivers)</td>
+                        <td id="avgSalaryDrivers">CHF 0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End of Payroll Statistics Sub-Section -->
+              </div>
+            </div>
+            <!-- End of Payroll Section -->
+
+            <!-- New: Cost Center Section -->
+            <div id="costCenterSection" class="fin-section">
+              <ul class="nav nav-tabs" id="costCenterTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" data-bs-toggle="tab" href="#outstandingCosts" role="tab">Outstanding Costs</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" data-bs-toggle="tab" href="#paidCosts" role="tab">Paid Costs</a>
+                </li>
+              </ul>
+              <div class="tab-content mt-3" id="costCenterContent">
+                <div class="tab-pane fade show active" id="outstandingCosts" role="tabpanel">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Invoice Link</th>
+                        <th>Final Price</th>
+                        <th>Account</th>
+                        <th>VAT</th>
+                        <th>Payment Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><a href="#">Invoice.pdf</a></td>
+                        <td>CHF 500</td>
+                        <td>Account A</td>
+                        <td>7%</td>
+                        <td>2025-03-01</td>
+                        <td><button class="btn btn-success btn-sm">Complete Expense</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tab-pane fade" id="paidCosts" role="tabpanel">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Invoice Link</th>
+                        <th>Final Price</th>
+                        <th>Account</th>
+                        <th>VAT</th>
+                        <th>Payment Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><a href="#">Invoice2.pdf</a></td>
+                        <td>CHF 600</td>
+                        <td>Account B</td>
+                        <td>7%</td>
+                        <td>2025-03-15</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- End of Cost Center Section -->
+
+            <!-- New: Reporting Section -->
+            <div id="reportingSection" class="fin-section">
+              <ul class="nav nav-tabs" id="reportingTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" data-bs-toggle="tab" href="#manuelReport" role="tab">Manuel Report</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" data-bs-toggle="tab" href="#vatReporting" role="tab">VAT Reporting</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" data-bs-toggle="tab" href="#journal" role="tab">Journal</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" data-bs-toggle="tab" href="#accountsArea" role="tab">Accounts Area</a>
+                </li>
+              </ul>
+              <div class="tab-content mt-3" id="reportingContent">
+                <div class="tab-pane fade show active" id="manuelReport" role="tabpanel">
+                  <h6>Manuel Report</h6>
+                  <p>
+                    (Copy the phrases and headings exactly as in your German PDF.)
+                  </p>
+                </div>
+                <div class="tab-pane fade" id="vatReporting" role="tabpanel">
+                  <h6>VAT Reporting</h6>
+                  <p>Calculations:</p>
+                  <ul>
+                    <li>200 – Sum of income transactions for services outside of Switzerland</li>
+                    <li>220 – Sum of all income transactions</li>
+                    <li>289 – Sum of 205, 220, 221, 225, 230, 235, 280</li>
+                    <li>299 – 200 deducted by 289</li>
+                    <li>303 – (Amount without VAT + VAT Amount)</li>
+                    <li>400 – VAT sum of all cost of goods sold</li>
+                    <li>405 – VAT sum of all the other fixed costs</li>
+                    <li>479 – Sum of 400, 405, 410, 415, and 420</li>
+                    <li>500 – 303 deducted by 479</li>
+                  </ul>
+                </div>
+                <div class="tab-pane fade" id="journal" role="tabpanel">
+                  <h6>Journal</h6>
+                  <p>
+                    (This section will list each transaction as they occur: incoming and outgoing payments.)
+                  </p>
+                </div>
+                <div class="tab-pane fade" id="accountsArea" role="tabpanel">
+                  <h6>Accounts Area</h6>
+                  <p>
+                    General Reporting (to be integrated with PowerBI), Income Statement, and Balance Sheet.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- End of Reporting Section -->
+
+            <!-- New: Margins Module Section -->
+            <div id="marginsModuleSection" class="fin-section">
+              <h5>Margins Module</h5>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Tour Type</th>
+                    <th>Hour Range</th>
+                    <th>Target Margin (%)</th>
+                    <th>Target Mark-Up (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Short Tours</td>
+                    <td>1 - 4 hours</td>
+                    <td>
+                      <input type="number" step="0.01" value="45" />%
+                    </td>
+                    <td>
+                      <input type="number" step="0.01" value="81.82" readonly />%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Medium Day Tours</td>
+                    <td>5 - 9 hours</td>
+                    <td>
+                      <input type="number" step="0.01" value="30" />%
+                    </td>
+                    <td>
+                      <input type="number" step="0.01" value="42.86" readonly />%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Long Day Tours</td>
+                    <td>10 - 13 hours</td>
+                    <td>
+                      <input type="number" step="0.01" value="25" />%
+                    </td>
+                    <td>
+                      <input type="number" step="0.01" value="33.33" readonly />%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End of Margins Module Section -->
+
+            <!-- New: OTA Margins Section -->
+            <div id="otaMarginsSection" class="fin-section">
+              <h5>OTA Margins Module</h5>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Tour Type</th>
+                    <th>Hour Range</th>
+                    <th>Target Margin (%)</th>
+                    <th>Target Mark-Up (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Short Tours</td>
+                    <td>1 - 5 hours</td>
+                    <td>
+                      <input type="number" step="0.01" value="36" />%
+                    </td>
+                    <td>
+                      <input type="number" step="0.01" value="56.25" readonly />%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Day Tours</td>
+                    <td>6 - 13 hours</td>
+                    <td>
+                      <input type="number" step="0.01" value="30" />%
+                    </td>
+                    <td>
+                      <input type="number" step="0.01" value="42.86" readonly />%
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End of OTA Margins Section -->
+
+          </div>
+          <!-- End of Card Body -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script for fetching tours and populating the revenue table -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        async function fetchToursForRevenue() {
+          try {
+            const response = await fetch(`${API_BASE_URL}/tours`);
+            if (!response.ok) {
+              throw new Error("Failed to fetch tours");
+            }
+            const tours = await response.json();
+            const tableBody = document.querySelector("#revenueTable tbody");
+            let rowsHTML = "";
+            tours.forEach((tour) => {
+              rowsHTML += `
+                <tr>
+                  <td>${tour.name || ""}</td>
+                  <td>${tour.guide_rate || 0}</td>
+                  <td>${tour.ticket_cost || 0}</td>
+                  <td>${tour.vehicle_cost || 0}</td>
+                </tr>
+              `;
+            });
+            tableBody.innerHTML = rowsHTML;
+          } catch (error) {
+            const msgDiv = document.getElementById("revenueMessage");
+            msgDiv.style.display = "block";
+            msgDiv.textContent = '\`Error: \${error.message}\;;
+          }
+        }
+        // Fetch Revenue data on page load
+        fetchToursForRevenue();
+      });
+    </script>
+
+    <!-- Script for Payroll > Employees > Personal Information Form -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const addChildBtn = document.getElementById("addChildBtn");
+        const childrenContainer = document.getElementById("childrenContainer");
+
+        addChildBtn.addEventListener("click", () => {
+          const childDiv = document.createElement("div");
+          childDiv.classList.add("child-info");
+          // Use string concatenation instead of a multi-line template literal to avoid JSX issues.
+          childDiv.innerHTML =
+            '<div class="row mb-3">' +
+            '  <div class="col-md-4">' +
+            '    <label class="form-label">Child Full Name</label>' +
+            '    <input type="text" class="form-control child-full-name" name="childFullName[]" required />' +
+            "  </div>" +
+            '  <div class="col-md-4">' +
+            '    <label class="form-label">Child Date of Birth</label>' +
+            '    <input type="date" class="form-control child-dob" name="childDob[]" required />' +
+            "  </div>" +
+            '  <div class="col-md-4">' +
+            '    <label class="form-label">Child Address</label>' +
+            '    <input type="text" class="form-control child-address" name="childAddress[]" required />' +
+            "  </div>" +
+            "</div>" +
+            '<button type="button" class="btn btn-danger remove-child-btn">Remove Child</button>';
+          childrenContainer.appendChild(childDiv);
+        });
+
+        // Event delegation for removing child info
+        childrenContainer.addEventListener("click", (e) => {
+          if (e.target && e.target.classList.contains("remove-child-btn")) {
+            e.target.parentElement.remove();
+          }
+        });
+      });
+    </script>
+
+    <!-- Script for Handling Payroll Navigation and Content Display -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const blocks = document.querySelectorAll(".fin-block");
+        const sections = document.querySelectorAll(".fin-section");
+
+        // Payroll Sub-Sections Elements
+        const payrollSubBlocks = document.querySelectorAll(".payroll-sub-block");
+        const payrollNavigation = document.getElementById("payrollNavigation");
+        const employeesSection = document.getElementById("employeesSection");
+        const companySection = document.getElementById("companySection");
+        const salarySlipSection = document.getElementById("salarySlipSection");
+        const payrollStatisticsSection = document.getElementById("payrollStatisticsSection");
+
+        function hideAllSections() {
+          sections.forEach((sec) => sec.classList.remove("active"));
+          blocks.forEach((block) => block.classList.remove("active"));
+          payrollNavigation.style.display = "none";
+          hideAllPayrollSubSections();
+        }
+
+        function hideAllPayrollSubSections() {
+          if (employeesSection) employeesSection.style.display = "none";
+          if (companySection) companySection.style.display = "none";
+          if (salarySlipSection) salarySlipSection.style.display = "none";
+          if (payrollStatisticsSection) payrollStatisticsSection.style.display = "none";
+          payrollNavigation.innerHTML = "";
+        }
+
+        function showSection(index) {
+          hideAllSections();
+          sections[index].classList.add("active");
+          blocks[index].classList.add("active");
+        }
+
+        blocks.forEach((block, idx) => {
+          block.addEventListener("click", () => {
+            showSection(idx);
+          });
+        });
+
+        if (blocks.length > 0) {
+          blocks[0].click();
+        }
+
+        // Payroll Sub-Sections Click Events
+        payrollSubBlocks.forEach((subBlock) => {
+          subBlock.addEventListener("click", () => {
+            payrollSubBlocks.forEach((sb) => sb.classList.remove("active"));
+            subBlock.classList.add("active");
+            payrollNavigation.style.display = "block";
+            const subsection = subBlock.getAttribute("data-subsection");
+            let navHTML = "";
+            if (subsection === "employees") {
+              navHTML = `
+                <a href="#" data-nav="personalInfo">Personal Information</a>
+                <a href="#" data-nav="employment">Employment</a>
+                <a href="#" data-nav="bankDetails">Bank Details</a>
+                <a href="#" data-nav="insurance">Insurance</a>
+                <a href="#" data-nav="sourceTax">Source Tax</a>
+              `;
+              employeesSection.style.display = "block";
+              companySection.style.display = "none";
+              salarySlipSection.style.display = "none";
+              payrollStatisticsSection.style.display = "none";
+            } else if (subsection === "company") {
+              navHTML = `
+                <a href="#" data-nav="masterData">Master Data</a>
+                <a href="#" data-nav="insurances">Insurances</a>
+                <a href="#" data-nav="wageTypes">Wage Types</a>
+                <a href="#" data-nav="accountPlan">Account Plan</a>
+              `;
+              employeesSection.style.display = "none";
+              companySection.style.display = "block";
+              salarySlipSection.style.display = "none";
+              payrollStatisticsSection.style.display = "none";
+            } else if (subsection === "salarySlip") {
+              navHTML = `<!-- Future links can be added here -->`;
+              employeesSection.style.display = "none";
+              companySection.style.display = "none";
+              salarySlipSection.style.display = "block";
+              payrollStatisticsSection.style.display = "none";
+            } else if (subsection === "statistics") {
+              navHTML = `<!-- No extra navigation needed for statistics -->`;
+              employeesSection.style.display = "none";
+              companySection.style.display = "none";
+              salarySlipSection.style.display = "none";
+              payrollStatisticsSection.style.display = "block";
+            }
+            payrollNavigation.innerHTML = navHTML;
+          });
+        });
+
+        payrollNavigation.addEventListener("click", (e) => {
+          if (e.target && e.target.tagName === "A") {
+            e.preventDefault();
+            const navTarget = e.target.getAttribute("data-nav");
+            const navLinks = payrollNavigation.querySelectorAll("a");
+            navLinks.forEach((link) => link.classList.remove("active"));
+            e.target.classList.add("active");
+            const personalInfoSection = document.getElementById("personalInfoSection");
+            const employmentSection = document.getElementById("employmentSection");
+            const bankDetailsSection = document.getElementById("bankDetailsSection");
+            const insuranceSection = document.getElementById("insuranceSection");
+            const sourceTaxSection = document.getElementById("sourceTaxSection");
+            const masterDataSection = document.getElementById("masterDataSection");
+            const insurancesSection = document.getElementById("insurancesSection");
+            const wageTypesSection = document.getElementById("wageTypesSection");
+            const accountPlanSection = document.getElementById("accountPlanSection");
+            if (personalInfoSection) personalInfoSection.style.display = "none";
+            if (employmentSection) employmentSection.style.display = "none";
+            if (bankDetailsSection) bankDetailsSection.style.display = "none";
+            if (insuranceSection) insuranceSection.style.display = "none";
+            if (sourceTaxSection) sourceTaxSection.style.display = "none";
+            if (masterDataSection) masterDataSection.style.display = "none";
+            if (insurancesSection) insurancesSection.style.display = "none";
+            if (wageTypesSection) wageTypesSection.style.display = "none";
+            if (accountPlanSection) accountPlanSection.style.display = "none";
+            if (navTarget === "personalInfo") {
+              if (personalInfoSection) personalInfoSection.style.display = "block";
+            } else if (navTarget === "employment") {
+              if (employmentSection) employmentSection.style.display = "block";
+            } else if (navTarget === "bankDetails") {
+              if (bankDetailsSection) bankDetailsSection.style.display = "block";
+            } else if (navTarget === "insurance") {
+              if (insuranceSection) insuranceSection.style.display = "block";
+            } else if (navTarget === "sourceTax") {
+              if (sourceTaxSection) sourceTaxSection.style.display = "block";
+            } else if (navTarget === "masterData") {
+              if (masterDataSection) masterDataSection.style.display = "block";
+            } else if (navTarget === "insurances") {
+              if (insurancesSection) insurancesSection.style.display = "block";
+            } else if (navTarget === "wageTypes") {
+              if (wageTypesSection) wageTypesSection.style.display = "block";
+            } else if (navTarget === "accountPlan") {
+              if (accountPlanSection) accountPlanSection.style.display = "block";
+            } else {
+              alert(
+                `You clicked on "${e.target.textContent}" - Content to be implemented.`
+              );
+            }
+          }
+        });
+      });
+    </script>
+
+    <!-- Script for Source Tax Form Dynamic Fields -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const taxTypeRadios = document.getElementsByName("taxType");
+        const tariffCodeInput = document.getElementById("tariffCodeInput");
+        const predefinedSelector = document.getElementById("predefinedSelector");
+        const openInput = document.getElementById("openInput");
+        taxTypeRadios.forEach((radio) => {
+          radio.addEventListener("change", () => {
+            if (radio.value === "Tariff Code" && radio.checked) {
+              tariffCodeInput.style.display = "block";
+              predefinedSelector.style.display = "none";
+              openInput.style.display = "none";
+            } else if (radio.value === "Predefined" && radio.checked) {
+              tariffCodeInput.style.display = "none";
+              predefinedSelector.style.display = "block";
+              openInput.style.display = "none";
+            } else if (radio.value === "Open" && radio.checked) {
+              tariffCodeInput.style.display = "none";
+              predefinedSelector.style.display = "none";
+              openInput.style.display = "block";
+            }
+          });
+        });
+      });
+    </script>
+
+    <!-- Script for Handling Master Data and Insurances Accordions -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const workingDaysSelect = document.getElementById("workingDays");
+        for (let i = 0; i <= 20; i++) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = i;
+          workingDaysSelect.appendChild(option);
+        }
+      });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Register script -->
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Registration successful!");
+              e.target.reset();
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("registerModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Registration failed.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Login script -->
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // Successful login
+              console.log("Login successful:", result);
+              localStorage.setItem("token", result.token);
+              localStorage.setItem("user", JSON.stringify(result.user));
+              updateAuthState(); // Update sidebar UI
+              alert("Login successful!");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("loginModal")
+              );
+              modal.hide();
+            } else {
+              // Login failed
+              console.error("Login failed:", result);
+              alert(result.error || "Invalid login credentials.");
+            }
+          } catch (error) {
+            console.error("An error occurred during login:", error);
+            alert("An error occurred. Please try again later.");
+          }
+        });
+    </script>
+
+    <!-- Forgot pw script -->
+    <script>
+      document
+        .getElementById("forgotPasswordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("forgotEmail").value;
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/forgot-password`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              alert("Password reset link sent to your email.");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("forgotPasswordModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Failed to send reset link.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Sidebar update script -->
+    <script>
+      function updateAuthState() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authBtn = document.getElementById("authBtn");
+        const userWelcome = document.getElementById("userWelcome");
+        const registerBtn = document.getElementById("registerBtn"); // Reference to the Register button
+
+        if (user) {
+          // User is logged in
+          authBtn.textContent = "Logout";
+          authBtn.classList.remove("btn-secondary");
+          authBtn.classList.add("btn-danger");
+          authBtn.removeAttribute("data-bs-toggle");
+          authBtn.removeAttribute("data-bs-target");
+
+          // Disable and gray out the Register button
+          registerBtn.disabled = true;
+          registerBtn.style.pointerEvents = "none"; // Prevent clicks
+          registerBtn.style.backgroundColor = "#6c757d"; // Gray background
+          registerBtn.style.borderColor = "#6c757d"; // Match border color
+          registerBtn.style.cursor = "not-allowed"; // Show "not allowed" cursor
+          registerBtn.textContent = "Register"; // Optional: Update text
+          registerBtn.removeAttribute("data-bs-toggle");
+          registerBtn.removeAttribute("data-bs-target");
+
+          // Add Welcome message and Reset Password link
+          userWelcome.innerHTML = `
+                    <div>Welcome, ${user.name}!</div>
+                    <a href="#" class="text-white mt-2 d-block" id="resetPasswordLink">Reset Password</a>
+                `;
+        } else {
+          // User is logged out
+          authBtn.textContent = "Login";
+          authBtn.classList.remove("btn-danger");
+          authBtn.classList.add("btn-secondary");
+          authBtn.setAttribute("data-bs-toggle", "modal");
+          authBtn.setAttribute("data-bs-target", "#loginModal");
+
+          // Enable and restore the Register button
+          registerBtn.disabled = false;
+          registerBtn.style.pointerEvents = "auto"; // Re-enable clicks
+          registerBtn.style.backgroundColor = ""; // Restore default
+          registerBtn.style.borderColor = ""; // Restore default
+          registerBtn.style.cursor = ""; // Restore default cursor
+          registerBtn.textContent = "Register"; // Restore default text
+          registerBtn.setAttribute("data-bs-toggle", "modal");
+          registerBtn.setAttribute("data-bs-target", "#registerModal");
+
+          userWelcome.textContent = "";
+        }
+      }
+
+      // Add logout functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+      });
+    </script>
+
+    <!-- Reset pw for logged user script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        // Add logout functionality
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+
+        // Add event listener for Reset Password link
+        document
+          .getElementById("userWelcome")
+          .addEventListener("click", (e) => {
+            if (e.target.id === "resetPasswordLink") {
+              const resetPasswordModal = new bootstrap.Modal(
+                document.getElementById("resetPasswordModal")
+              );
+              resetPasswordModal.show();
+            }
+          });
+
+        // Handle Reset Password form submission
+        document
+          .getElementById("resetPasswordForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById("newPassword").value;
+            const token = localStorage.getItem("token"); // Use the stored token for authentication
+
+            try {
+              const response = await fetch(`${API_BASE_URL}/users/reset-password`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ newPassword }),
+              });
+
+              const result = await response.json();
+              if (response.ok) {
+                alert("Password reset successfully!");
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("resetPasswordModal")
+                );
+                modal.hide();
+              } else if (result.errors) {
+                // Display validation errors
+                alert(result.errors.map((err) => err.msg).join("\n"));
+              } else {
+                alert(result.message || "Password reset failed.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("An error occurred.");
+            }
+          });
+      });
+
+      // Switch from register to login modal
+      document
+        .getElementById("switchToLogin")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // Close the Register Modal
+          const registerModal = bootstrap.Modal.getInstance(
+            document.getElementById("registerModal")
+          );
+          registerModal.hide();
+
+          // Open the Login Modal
+          const loginModal = new bootstrap.Modal(
+            document.getElementById("loginModal")
+          );
+          loginModal.show();
+        });
+    </script>
+  </body>
+</html>

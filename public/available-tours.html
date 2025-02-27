@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Tours</title>
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #0371e7, #012041); /* Gradient background */
+            color: white;
+            border-radius: 0.5rem 0.5rem 0 0;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); /* Angled border */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 91, 187, 0.8); /* Glowing effect */
+            padding: 20px;
+            position: relative;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            display: block;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: white;
+        }
+
+        .table {
+            border: none;
+        }
+
+        .sidebar-link {
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            display: block;
+            color: white;
+            border-radius: 4px;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .sidebar-section-title {
+            font-size: 1rem;
+            color: #b0b0b0; /* Light grey color for section titles */
+            padding: 5px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .ms-3 {
+            margin-left: 1rem; /* Indent links under section titles */
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #140303, #007bff);
+            padding-top: 20px;
+            color: white;
+            overflow-y: auto;
+        }
+    </style>
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column justify-content-between">
+        <div>
+          <!-- Home -->
+          <a href="index.html" class="sidebar-link"
+            ><i class="fas fa-home me-2"></i>Home</a
+          >
+  
+          <!-- Spacing -->
+          <div class="mt-5"></div>
+  
+          <!-- Product Area -->
+          <div class="sidebar-section-title">Product Area</div>
+          <a href="product-area.html" class="sidebar-link ms-3"
+            ><i class="fa-solid fa-plus"></i> New Experience</a
+          >
+  
+          <!-- Spacing -->
+          <div class="mt-5"></div>
+  
+          <!-- Tours Section -->
+          <div class="sidebar-section-title">Tours</div>
+          <a href="tour-management.html" class="sidebar-link ms-3"
+            ><i class="fa-solid fa-plus"></i> Add a New Tour</a
+          >
+          <a href="available-tours.html" class="sidebar-link ms-3"
+            ><i class="fas fa-list me-2"></i>Available Tours</a
+          >
+  
+          <!-- Spacing -->
+          <div class="mt-5"></div>
+  
+          <!-- Bookings Section -->
+          <div class="sidebar-section-title">Travel Agent Area</div>
+          <a href="create-booking.html" class="sidebar-link ms-3"
+            ><i class="fa-solid fa-calendar-check"></i> Create Booking</a
+          >
+          <a href="view-bookings.html" class="sidebar-link ms-3"
+            ><i class="fas fa-list me-2"></i>View Bookings</a
+          >
+  
+          <div class="mt-5"></div>
+  
+          <!-- External Booking Section -->
+          <div class="sidebar-section-title">Customers Portal</div>
+          <a href="external-booking.html" class="sidebar-link ms-3"
+            ><i class="fa-solid fa-ticket"></i> Book a tour</a
+          >
+          <a href="available-tours.html" class="sidebar-link ms-3"
+            ><i class="fas fa-list me-2"></i>View Tours</a
+          >
+          <a href="my-bookings.html" class="sidebar-link ms-3"
+            ><i class="fa-solid fa-book"></i> My Bookings</a
+          >
+  
+           <!-- Spacing -->
+           <div class="mt-5"></div>
+  
+          <!-- New Financial Area Section -->
+          <div class="mt-5"></div>
+          <!-- some spacing -->
+  
+          <div class="sidebar-section-title">Financial Area</div>
+          <a href="financial-area.html" class="sidebar-link ms-3"
+            >Financial Area</a
+          >
+  
+          <!-- Spacing -->
+          <div class="mt-5"></div>
+          
+          <!-- Operation Area -->
+          <div class="sidebar-section-title">Operation Area</div>
+          <a href="operation-area.html" class="sidebar-link ms-3">
+            Operation Area
+          </a>
+          <div class="mt-5"></div>
+          <!-- Employee Portal -->
+          <div class="sidebar-section-title">Employee Portal</div>
+          <a href="employee-area.html" class="sidebar-link ms-3">
+            <i class="fa-solid fa-user"></i> Employee Area
+          </a>
+  
+          <!-- Spacing -->
+          <div class="mt-5"></div>
+  
+          <div class="sidebar-section-title">User Area</div>
+  
+          <!-- Register/Login or Logout Button -->
+          <button
+            class="btn btn-primary ms-3 mt-3"
+            id="registerBtn"
+            data-bs-toggle="modal"
+            data-bs-target="#registerModal"
+          >
+            Register
+          </button>
+          <button
+            class="btn btn-secondary ms-3 mt-3"
+            id="authBtn"
+            data-bs-toggle="modal"
+            data-bs-target="#loginModal"
+          >
+            Login
+          </button>
+  
+          <!-- Welcome Message -->
+          <div id="userWelcome" class="text-center mt-3 text-white">
+            <!-- Content dynamically updated via JavaScript -->
+          </div>
+  
+  
+  
+  
+        </div>
+        <div class="text-center mt-auto">
+          <img
+            src="assets/logo.png"
+            alt="Logo"
+            class="img-fluid"
+            style="max-width: 80%; height: auto; margin-bottom: 20px"
+          />
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Register</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Register
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <p class="text-center w-100">
+              Already have an account?
+              <a href="#" id="switchToLogin">Login</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">
+                Login
+              </button>
+              <a
+                href="#"
+                class="text-primary mt-2 d-block"
+                data-bs-toggle="modal"
+                data-bs-target="#forgotPasswordModal"
+                >Forgot Password?</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div
+      class="modal fade"
+      id="forgotPasswordModal"
+      tabindex="-1"
+      aria-labelledby="forgotPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordModalLabel">
+              Forgot Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="forgotPasswordForm">
+              <div class="mb-3">
+                <label for="forgotEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="forgotEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your registered email"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Send Reset Link
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div
+      class="modal fade"
+      id="resetPasswordModal"
+      tabindex="-1"
+      aria-labelledby="resetPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resetPasswordModalLabel">
+              Reset Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="resetPasswordForm">
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  class="form-control"
+                  placeholder="Enter your new password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Reset Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4>Available Tours</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="form-control"
+                            placeholder="Start typing to search or filter your tours"
+                            onkeyup="filterTours()"
+                        />
+                    </div>
+                    
+                    <table id="toursTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Short Description</th>
+                                <th>Duration</th>
+                                <th>Location</th>
+                                <th>What to Bring</th>
+                                <th>Know Before You Go</th>
+                                <th>Questions</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        const fetchTours = async () => {
+            //const response = await fetch('/api/tours');
+            const response = await fetch(`${API_BASE_URL}/tours`);
+            const tours = await response.json();
+            const toursTableBody = document.querySelector('#toursTable tbody');
+        
+            toursTableBody.innerHTML = tours.map(tour => `
+                <tr>
+                    <td>
+                        ${tour.image ? `<img src="/uploads/${tour.image}" alt="Tour Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">` : ''}
+                    </td>
+                    <td>
+                        <a href="view-tour.html?id=${tour.id}" style="text-decoration: none; color: #007bff;">${tour.name}</a>
+                    </td>
+                    <td>${tour.short_description || ''}</td>
+                    <td>${String(tour.duration_hours).padStart(2, '0')}:${String(tour.duration_minutes).padStart(2, '0')}</td>
+                    <td>${tour.location || ''}</td>
+                    <td>${tour.what_to_bring || ''}</td>
+                    <td>${tour.know_before || ''}</td>
+                    <td>${tour.questions || ''}</td>
+                    <td>
+                        <span class="text-danger delete-link" data-id="${tour.id}" style="cursor: pointer;">Delete</span>
+                        <span class="text-success edit-link" data-id="${tour.id}" style="cursor: pointer; margin-left: 10px;">Edit</span>
+                    </td>
+                </tr>
+            `).join('');
+
+        };
+        
+        const filterTours = () => {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const tableRows = document.querySelectorAll('#toursTable tbody tr');
+        
+            tableRows.forEach((row) => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchInput) ? '' : 'none';
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toursTableBody = document.querySelector('#toursTable tbody');
+        
+            const deleteTour = async (id) => {
+                try {
+                  const response = await fetch(`${API_BASE_URL}/tours/${id}`, {
+                    method: "DELETE",
+                  });
+                    if (response.ok) {
+                        alert('Tour deleted successfully.');
+                        // Remove the row from the table
+                        document.querySelector(`.delete-link[data-id="${id}"]`).closest('tr').remove();
+                    } else {
+                        const error = await response.json();
+                        alert(`Failed to delete tour: ${error.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting tour:', error);
+                    alert('An error occurred while deleting the tour.');
+                }
+            };
+        
+            toursTableBody.addEventListener('click', (event) => {
+                const target = event.target;
+        
+                // Delete logic
+                if (target.classList.contains('delete-link')) {
+                    const tourId = target.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this tour?')) {
+                        deleteTour(tourId);
+                    }
+                }
+        
+                // Edit logic
+                if (target.classList.contains('edit-link')) {
+                    const tourId = target.getAttribute('data-id');
+                    // Navigate to the tour-management.html with the tour ID as a query parameter
+                    window.location.href = `tour-management.html?id=${tourId}`;
+                }
+            });
+        });
+        
+        
+        fetchTours();
+    </script>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Register script -->
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Registration successful!");
+              e.target.reset();
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("registerModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Registration failed.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Login script -->
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // Successful login
+              console.log("Login successful:", result);
+              localStorage.setItem("token", result.token);
+              localStorage.setItem("user", JSON.stringify(result.user));
+              updateAuthState(); // Update sidebar UI
+              alert("Login successful!");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("loginModal")
+              );
+              modal.hide();
+            } else {
+              // Login failed
+              console.error("Login failed:", result);
+              alert(result.error || "Invalid login credentials.");
+            }
+          } catch (error) {
+            console.error("An error occurred during login:", error);
+            alert("An error occurred. Please try again later.");
+          }
+        });
+    </script>
+
+    <!-- Forgot pw script -->
+    <script>
+      document
+        .getElementById("forgotPasswordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("forgotEmail").value;
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/forgot-password`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              alert("Password reset link sent to your email.");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("forgotPasswordModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Failed to send reset link.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Sidebar update script -->
+    <script>
+      function updateAuthState() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authBtn = document.getElementById("authBtn");
+        const userWelcome = document.getElementById("userWelcome");
+        const registerBtn = document.getElementById("registerBtn"); // Reference to the Register button
+
+        if (user) {
+          // User is logged in
+          authBtn.textContent = "Logout";
+          authBtn.classList.remove("btn-secondary");
+          authBtn.classList.add("btn-danger");
+          authBtn.removeAttribute("data-bs-toggle");
+          authBtn.removeAttribute("data-bs-target");
+
+          // Disable and gray out the Register button
+          registerBtn.disabled = true;
+          registerBtn.style.pointerEvents = "none"; // Prevent clicks
+          registerBtn.style.backgroundColor = "#6c757d"; // Gray background
+          registerBtn.style.borderColor = "#6c757d"; // Match border color
+          registerBtn.style.cursor = "not-allowed"; // Show "not allowed" cursor
+          registerBtn.textContent = "Register"; // Optional: Update text
+          registerBtn.removeAttribute("data-bs-toggle");
+          registerBtn.removeAttribute("data-bs-target");
+
+          // Add Welcome message and Reset Password link
+          userWelcome.innerHTML = `
+                    <div>Welcome, ${user.name}!</div>
+                    <a href="#" class="text-white mt-2 d-block" id="resetPasswordLink">Reset Password</a>
+                `;
+        } else {
+          // User is logged out
+          authBtn.textContent = "Login";
+          authBtn.classList.remove("btn-danger");
+          authBtn.classList.add("btn-secondary");
+          authBtn.setAttribute("data-bs-toggle", "modal");
+          authBtn.setAttribute("data-bs-target", "#loginModal");
+
+          // Enable and restore the Register button
+          registerBtn.disabled = false;
+          registerBtn.style.pointerEvents = "auto"; // Re-enable clicks
+          registerBtn.style.backgroundColor = ""; // Restore default
+          registerBtn.style.borderColor = ""; // Restore default
+          registerBtn.style.cursor = ""; // Restore default cursor
+          registerBtn.textContent = "Register"; // Restore default text
+          registerBtn.setAttribute("data-bs-toggle", "modal");
+          registerBtn.setAttribute("data-bs-target", "#registerModal");
+
+          userWelcome.textContent = "";
+        }
+      }
+
+      // Add logout functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+      });
+    </script>
+
+    <!-- Reset pw for logged user script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        // Add logout functionality
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+
+        // Add event listener for Reset Password link
+        document
+          .getElementById("userWelcome")
+          .addEventListener("click", (e) => {
+            if (e.target.id === "resetPasswordLink") {
+              const resetPasswordModal = new bootstrap.Modal(
+                document.getElementById("resetPasswordModal")
+              );
+              resetPasswordModal.show();
+            }
+          });
+
+        // Handle Reset Password form submission
+        document
+          .getElementById("resetPasswordForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById("newPassword").value;
+            const token = localStorage.getItem("token"); // Use the stored token for authentication
+
+            try {
+              const response = await fetch(`${API_BASE_URL}/users/reset-password`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ newPassword }),
+              });
+
+              const result = await response.json();
+              if (response.ok) {
+                alert("Password reset successfully!");
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("resetPasswordModal")
+                );
+                modal.hide();
+              } else if (result.errors) {
+                // Display validation errors
+                alert(result.errors.map((err) => err.msg).join("\n"));
+              } else {
+                alert(result.message || "Password reset failed.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("An error occurred.");
+            }
+          });
+      });
+
+      // Switch from register to login modal
+      document
+        .getElementById("switchToLogin")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // Close the Register Modal
+          const registerModal = bootstrap.Modal.getInstance(
+            document.getElementById("registerModal")
+          );
+          registerModal.hide();
+
+          // Open the Login Modal
+          const loginModal = new bootstrap.Modal(
+            document.getElementById("loginModal")
+          );
+          loginModal.show();
+        });
+    </script>
+</body>
+</html>

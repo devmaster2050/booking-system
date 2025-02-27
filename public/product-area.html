@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tour Management (Multi-Step)</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      .is-invalid {
+        border: 2px solid red;
+      }
+
+      .text-primary {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Original (left) sidebar */
+      .sidebar {
+        height: 100vh;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: linear-gradient(135deg, #140303, #007bff);
+        padding-top: 20px;
+        color: white;
+        z-index: 2;
+        overflow-y: auto;
+      }
+
+      /* New step sidebar (to the right of the original sidebar) */
+      .step-sidebar {
+        height: 100vh;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 250px; /* sits immediately to the right of .sidebar */
+        background-color: #f8f9fa; /* Light gray or whiteish background */
+        border-right: 1px solid #ccc;
+        padding-top: 20px;
+        z-index: 2;
+      }
+
+      .step-sidebar a {
+        text-decoration: none;
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        display: block;
+        color: #333;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+      .step-sidebar a:hover,
+      .step-sidebar a.active-step {
+        background-color: #007bff;
+        color: white;
+      }
+
+      /* The main content is offset by 2 sidebars = 500px total */
+      .content {
+        margin-left: 500px;
+        padding: 20px;
+      }
+
+      .card-header {
+        background: linear-gradient(to right, #0371e7, #012041);
+        color: white;
+        border-radius: 0.5rem 0.5rem 0 0;
+        clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 91, 187, 0.8);
+        padding: 20px;
+        position: relative;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-control {
+        border-radius: 8px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        border-radius: 8px;
+        height: 45px;
+        width: 180px;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+      .success-message {
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .error-message {
+        color: red;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .form-label {
+        margin-bottom: 0.5rem;
+      }
+
+      #location-label {
+        margin-top: 1rem;
+      }
+
+      .sidebar-link {
+        text-decoration: none;
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        display: block;
+        color: white;
+        border-radius: 4px;
+      }
+      .sidebar-link:hover {
+        background-color: #007bff;
+        color: white;
+      }
+      .sidebar-section-title {
+        font-size: 1rem;
+        color: #b0b0b0;
+        padding: 5px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .ms-3 {
+        margin-left: 1rem;
+      }
+
+      /* Hide all step sections by default */
+      .step-section {
+        display: none;
+      }
+
+      /* Highlight the active (selected) button */
+      .btn-group .btn.active {
+        background-color: #007bff;
+        color: white;
+      }
+
+      /* Rundown Details Styles */
+      .rundown-detail {
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+      }
+
+      .remove-rundown-detail {
+        width: 100%;
+      }
+    </style>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Leaflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+    />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"></script>
+  </head>
+  <body>
+    <!-- Original left sidebar -->
+    <div class="sidebar d-flex flex-column justify-content-between">
+      <div>
+        <!-- Home -->
+        <a href="index.html" class="sidebar-link"
+          ><i class="fas fa-home me-2"></i>Home</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Product Area -->
+        <div class="sidebar-section-title">Product Area</div>
+        <a href="product-area.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-plus"></i> New Experience</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Tours Section -->
+        <div class="sidebar-section-title">Tours</div>
+        <a href="tour-management.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-plus"></i> Add a New Tour</a
+        >
+        <a href="available-tours.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>Available Tours</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Bookings Section -->
+        <div class="sidebar-section-title">Travel Agent Area</div>
+        <a href="create-booking.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-calendar-check"></i> Create Booking</a
+        >
+        <a href="view-bookings.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>View Bookings</a
+        >
+
+        <div class="mt-5"></div>
+
+        <!-- External Booking Section -->
+        <div class="sidebar-section-title">Customers Portal</div>
+        <a href="external-booking.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-ticket"></i> Book a tour</a
+        >
+        <a href="available-tours.html" class="sidebar-link ms-3"
+          ><i class="fas fa-list me-2"></i>View Tours</a
+        >
+        <a href="my-bookings.html" class="sidebar-link ms-3"
+          ><i class="fa-solid fa-book"></i> My Bookings</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- New Financial Area Section -->
+        <div class="mt-5"></div>
+        <!-- some spacing -->
+
+        <div class="sidebar-section-title">Financial Area</div>
+        <a href="financial-area.html" class="sidebar-link ms-3"
+          >Financial Area</a
+        >
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <!-- Operation Area -->
+        <div class="sidebar-section-title">Operation Area</div>
+        <a href="operation-area.html" class="sidebar-link ms-3">
+          Operation Area
+        </a>
+        <div class="mt-5"></div>
+        <!-- Employee Portal -->
+        <div class="sidebar-section-title">Employee Portal</div>
+        <a href="employee-area.html" class="sidebar-link ms-3">
+          <i class="fa-solid fa-user"></i> Employee Area
+        </a>
+
+        <!-- Spacing -->
+        <div class="mt-5"></div>
+
+        <div class="sidebar-section-title">User Area</div>
+
+        <!-- Register/Login or Logout Button -->
+        <button
+          class="btn btn-primary ms-3 mt-3"
+          id="registerBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#registerModal"
+        >
+          Register
+        </button>
+        <button
+          class="btn btn-secondary ms-3 mt-3"
+          id="authBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#loginModal"
+        >
+          Login
+        </button>
+
+        <!-- Welcome Message -->
+        <div id="userWelcome" class="text-center mt-3 text-white">
+          <!-- Content dynamically updated via JavaScript -->
+        </div>
+      </div>
+      <div class="text-center mt-auto">
+        <img
+          src="assets/logo.png"
+          alt="Logo"
+          class="img-fluid"
+          style="max-width: 80%; height: auto; margin-bottom: 20px"
+        />
+      </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Register</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Register
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <p class="text-center w-100">
+              Already have an account?
+              <a href="#" id="switchToLogin">Login</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">
+                Login
+              </button>
+              <a
+                href="#"
+                class="text-primary mt-2 d-block"
+                data-bs-toggle="modal"
+                data-bs-target="#forgotPasswordModal"
+                >Forgot Password?</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div
+      class="modal fade"
+      id="forgotPasswordModal"
+      tabindex="-1"
+      aria-labelledby="forgotPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordModalLabel">
+              Forgot Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="forgotPasswordForm">
+              <div class="mb-3">
+                <label for="forgotEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="forgotEmail"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter your registered email"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Send Reset Link
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div
+      class="modal fade"
+      id="resetPasswordModal"
+      tabindex="-1"
+      aria-labelledby="resetPasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="resetPasswordModalLabel">
+              Reset Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="resetPasswordForm">
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  class="form-control"
+                  placeholder="Enter your new password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Reset Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New step sidebar (for multi-step) -->
+    <div class="step-sidebar">
+      <h5 class="p-3">Tour Creation Steps</h5>
+      <a href="#" class="step-link active-step" data-step="tourDetailsStep">
+        Rundown
+      </a>
+      <a href="#" class="step-link" data-step="contentWriterAreaStep">
+        Content Writer Area
+      </a>
+      <a href="#" class="step-link" data-step="pictureStep">
+        Picture Insertion
+      </a>
+      <a href="#" class="step-link" data-step="costDetailsStep">
+        Cost Details
+      </a>
+      <a href="#" class="step-link" data-step="bookingRestrictionsStep">
+        Booking Details
+      </a>
+    </div>
+
+    <!-- Main content area (pushed 500px to the right) -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="card shadow border-0 mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Create a new tour (Multi-Step)</h4>
+          </div>
+          <div class="card-body">
+            <form id="addTourForm">
+              <!-- STEP 1: Tour Details -->
+              <div id="tourDetailsStep" class="step-section">
+                <h5
+                  class="mb-3 text-primary border-bottom pb-2"
+                  style="font-size: 1.5rem; font-weight: bold"
+                >
+                  Tour Details
+                </h5>
+                <div class="row mb-3 align-items-center">
+                  <div class="col-md-6">
+                    <label for="name" class="form-label">Tour Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="form-control"
+                      placeholder="Tour Name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Tour Location</label>
+                    <!-- Button Group for Tour Location -->
+                    <div
+                      class="btn-group mb-3"
+                      role="group"
+                      aria-label="Tour Location"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        data-location="Basel"
+                      >
+                        Basel
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        data-location="Zurich"
+                      >
+                        Zurich
+                      </button>
+                    </div>
+                    <!-- Hidden Input to Store Selected Location -->
+                    <input
+                      type="hidden"
+                      id="location"
+                      name="location"
+                      required
+                    />
+                  </div>
+                </div>
+                <!-- Rundown Details Section -->
+                <div class="mb-4">
+                  <h6 class="form-label">Rundown Details</h6>
+                  <div id="rundownDetailsContainer">
+                    <div class="rundown-detail border p-3 mb-3">
+                      <div class="row mb-2">
+                        <div class="col-md-4">
+                          <label class="form-label">Title</label>
+                          <input
+                            type="text"
+                            class="form-control rundown-title"
+                            placeholder="Enter title"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Duration (Hours)</label>
+                          <input
+                            type="number"
+                            class="form-control rundown-duration"
+                            placeholder="Enter duration in hours"
+                            min="0"
+                            required
+                          />
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                          <button
+                            type="button"
+                            class="btn btn-danger remove-rundown-detail"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                      <div class="mb-2">
+                        <label class="form-label">Description</label>
+                        <textarea
+                          class="form-control rundown-description"
+                          rows="4"
+                          placeholder="Provide the rundown description..."
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    id="addRundownDetail"
+                    class="btn btn-secondary"
+                  >
+                    Add Rundown Detail
+                  </button>
+                  <input
+                    type="hidden"
+                    id="general_description"
+                    name="general_description"
+                  />
+                </div>
+                <!-- Maximum Capacity -->
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label for="max_capacity" class="form-label"
+                      >Maximum Capacity</label
+                    >
+                    <input
+                      type="number"
+                      id="max_capacity"
+                      name="max_capacity"
+                      class="form-control"
+                      placeholder="Maximum number of people per tour date"
+                    />
+                  </div>
+                </div>
+                <!-- Tour Type Toggle -->
+                <div class="mb-4">
+                  <label class="form-label fw-bold">Tour Type:</label>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="tourTypeToggle"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="tourTypeToggle"
+                      id="tourTypeLabel"
+                      >Private Tour</label
+                    >
+                  </div>
+                </div>
+                <!-- Meeting Location -->
+                <div class="mb-4">
+                  <label for="meetingLocation" class="form-label"
+                    >Meeting Location</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      id="meetingLocation"
+                      name="meeting_location"
+                      class="form-control"
+                      placeholder="Enter a meeting location"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <!-- Duration Hours & Minutes -->
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="duration_hours" class="form-label"
+                      >Duration (Hours)</label
+                    >
+                    <select
+                      id="duration_hours"
+                      name="duration_hours"
+                      class="form-control"
+                      required
+                    >
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                      <option value="21">21</option>
+                      <option value="22">22</option>
+                      <option value="23">23</option>
+                      <option value="24">24</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="duration_minutes" class="form-label"
+                      >Duration (Minutes)</label
+                    >
+                    <select
+                      id="duration_minutes"
+                      name="duration_minutes"
+                      class="form-control"
+                      required
+                    >
+                      <option value="0">0</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                      <option value="45">45</option>
+                      <option value="50">50</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- Itinerary Points -->
+                <div class="mb-4">
+                  <label class="form-label">Itinerary</label>
+                  <div
+                    id="map"
+                    style="height: 400px; width: 100%; margin-bottom: 15px"
+                  ></div>
+                  <button id="addPoint" class="btn btn-secondary mb-3">
+                    Add a Point
+                  </button>
+                  <ul id="itineraryList"></ul>
+                </div>
+                <!-- Availability and Pricing -->
+                <div class="mb-4">
+                  <h5 class="form-label text-primary">
+                    Availability and Pricing
+                  </h5>
+                  <div class="form-check form-switch mb-4">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="indefinite_availability"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="indefinite_availability"
+                      >Indefinite Availability</label
+                    >
+                  </div>
+                  <div class="mb-4">
+                    <label for="start_date" class="form-label"
+                      >Start Date</label
+                    >
+                    <input
+                      type="text"
+                      id="start_date"
+                      name="start_date"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input
+                      type="text"
+                      id="end_date"
+                      name="end_date"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="timeSlots" class="form-label"
+                      >Available Time Slots</label
+                    >
+                    <div id="timeSlotsContainer"></div>
+                    <button
+                      type="button"
+                      id="addTimeSlot"
+                      class="btn btn-primary mt-2"
+                    >
+                      Add Time Slot
+                    </button>
+                  </div>
+                  <label class="form-label mt-4">Blackout Days</label>
+                  <div id="blackoutDaysContainer"></div>
+                  <button
+                    type="button"
+                    id="addBlackoutDay"
+                    class="btn btn-dark mt-2"
+                  >
+                    Add Blackout Day
+                  </button>
+                </div>
+                <!-- Exclusions -->
+                <div class="mb-4">
+                  <h6 class="form-label">Exclusions</h6>
+                  <div id="exclusionsContainer">
+                    <div class="input-group mb-2 exclusion-input-group">
+                      <input
+                        type="text"
+                        class="form-control exclusion-input"
+                        placeholder="Enter exclusion"
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-danger remove-exclusion"
+                        style="display: none"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    id="addExclusion"
+                    class="btn btn-secondary"
+                  >
+                    Add Exclusion
+                  </button>
+                </div>
+                <!-- Inclusions -->
+                <div class="mb-4">
+                  <h6 class="form-label">Inclusions</h6>
+                  <div id="inclusionsContainer">
+                    <div class="input-group mb-2 inclusion-input-group">
+                      <input
+                        type="text"
+                        class="form-control inclusion-input"
+                        placeholder="Enter inclusion"
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-danger remove-inclusion"
+                        style="display: none"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    id="addInclusion"
+                    class="btn btn-secondary"
+                  >
+                    Add Inclusion
+                  </button>
+                </div>
+              </div>
+              <!-- STEP 2: Picture Insertion -->
+              <div id="pictureStep" class="step-section">
+                <h5
+                  class="mb-3 text-primary border-bottom pb-2"
+                  style="font-size: 1.5rem; font-weight: bold"
+                >
+                  Picture Insertion
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="image" class="form-label">Image</label>
+                    <input
+                      type="file"
+                      id="image"
+                      name="image"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- STEP 3: Cost Details (Modified) -->
+              <div id="costDetailsStep" class="step-section">
+                <h5
+                  class="mb-3 text-primary border-bottom pb-2"
+                  style="font-size: 1.5rem; font-weight: bold"
+                >
+                  Cost Details
+                </h5>
+                <!-- Tabs for Cities (Default City only for now) -->
+                <ul class="nav nav-tabs" id="costCityTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link active"
+                      id="city-tab-default"
+                      data-bs-toggle="tab"
+                      href="#cityDefaultCost"
+                      role="tab"
+                      >Default City</a
+                    >
+                  </li>
+                </ul>
+                <div class="tab-content mt-3" id="costCityContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="cityDefaultCost"
+                    role="tabpanel"
+                  >
+                    <!-- Rail Tickets -->
+                    <div class="mb-4">
+                      <h6>Rail Tickets</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Client Train Ticket (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="clientTrainTicket"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Swiss Half Fare Travel Pass (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="halfFarePass"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label"
+                            >Total Rail Ticket Cost (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalRailCost"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Mountain Tickets -->
+                    <div class="mb-4">
+                      <h6>Mountain Tickets</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-4">
+                          <label class="form-label"
+                            >Mountain Ticket 1 (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="mountainTicket1"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label"
+                            >Mountain Ticket 2 (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="mountainTicket2"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Boat Ticket (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="boatTicket"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label"
+                            >Total Mountain Ticket (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalMountainTicket"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Museum Tickets -->
+                    <div class="mb-4">
+                      <h6>Museum Tickets</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-4">
+                          <label class="form-label"
+                            >Museum Ticket 1 (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="museumTicket1"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label"
+                            >Museum Ticket 2 (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="museumTicket2"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label"
+                            >Museum Ticket 3 (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="museumTicket3"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label"
+                            >Total Museum Tickets (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalMuseumTickets"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Tasting -->
+                    <div class="mb-4">
+                      <h6>Tasting</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-4">
+                          <label class="form-label">Tasting 1 (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="tasting1"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Tasting 2 (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="tasting2"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label">Tasting 3 (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="tasting3"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label">Total Tasting (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalTasting"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Guide & Transportation -->
+                    <div class="mb-4">
+                      <h6>Guide &amp; Transportation</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Guide Train Ticket (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="guideTrainTicket"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Transportation (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="transportation"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label"
+                            >Total Guide &amp; Transportation Cost (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalGuideTransport"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Final Totals -->
+                    <div class="mb-4">
+                      <h6>Final Totals</h6>
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Total Individual Cost (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalIndividualCost"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Total Bulk Cost (CHF)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="totalBulkCost"
+                            placeholder="Calculated automatically"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Children Cost -->
+                    <div class="mb-4">
+                      <h6>Children Cost</h6>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="form-label">Children Cost (CHF)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="childrenCost"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- STEP 4: Booking Restrictions -->
+              <div id="bookingRestrictionsStep" class="step-section">
+                <h5
+                  class="mb-3 text-primary border-bottom pb-2"
+                  style="font-size: 1.5rem; font-weight: bold"
+                >
+                  Booking Details
+                </h5>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="what_to_bring" class="form-label"
+                      >What to Bring</label
+                    >
+                    <textarea
+                      id="what_to_bring"
+                      name="what_to_bring"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Items participants should bring..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="know_before" class="form-label"
+                      >Know Before You Go</label
+                    >
+                    <textarea
+                      id="know_before"
+                      name="know_before"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Important details participants should know..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="questions" class="form-label">Questions</label>
+                    <textarea
+                      id="questions"
+                      name="questions"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Add any questions you want to include..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="form-check form-switch mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="isAdditionalNameRequired"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="isAdditionalNameRequired"
+                  >
+                    Is each additional passenger's name required?
+                  </label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="isAdditionalEmailRequired"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="isAdditionalEmailRequired"
+                  >
+                    Is each additional passenger's email required?
+                  </label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="isAdditionalDobRequired"
+                  />
+                  <label class="form-check-label" for="isAdditionalDobRequired">
+                    Is each additional passenger's date of birth required?
+                  </label>
+                </div>
+              </div>
+              <!-- STEP 5: Content Writer Area (Read-Only Copy of Rundown) -->
+              <div id="contentWriterAreaStep" class="step-section">
+                <h5
+                  class="mb-3 text-primary border-bottom pb-2"
+                  style="font-size: 1.5rem; font-weight: bold"
+                >
+                  Content Writer Area
+                </h5>
+                <p>Please review the Rundown Details:</p>
+                <div id="contentWriterCopy" class="form-section">
+                  <!-- Content will be populated by JavaScript -->
+                </div>
+              </div>
+              <!-- Instead of "submit", a single button that changes text -->
+              <div class="row">
+                <div class="col-md-12 text-end">
+                  <button
+                    id="nextOrSaveBtn"
+                    class="btn btn-primary"
+                    type="button"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div id="formMessage" class="mt-3" style="display: none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Step Navigation and Modified Validation -->
+    <script>
+      // Array of step IDs; note that we now allow navigation without immediate validation
+      let currentStepIndex = 0;
+      const stepIds = [
+        "tourDetailsStep",
+        "contentWriterAreaStep",
+        "pictureStep",
+        "costDetailsStep",
+        "bookingRestrictionsStep",
+      ];
+
+      function showStep(index) {
+        const stepLinks = document.querySelectorAll(".step-link");
+        const stepSections = document.querySelectorAll(".step-section");
+        stepSections.forEach((sec) => (sec.style.display = "none"));
+        stepLinks.forEach((link) => link.classList.remove("active-step"));
+
+        const stepId = stepIds[index];
+        document.getElementById(stepId).style.display = "block";
+
+        const activeLink = document.querySelector(
+          `.step-link[data-step="${stepId}"]`
+        );
+        if (activeLink) activeLink.classList.add("active-step");
+
+        const nextBtn = document.getElementById("nextOrSaveBtn");
+        if (index < stepIds.length - 1) {
+          nextBtn.textContent = "Next";
+        } else {
+          nextBtn.textContent = "Save Tour";
+        }
+
+        // If it's the tour details step, re-check the map size
+        if (stepId === "tourDetailsStep") {
+          setTimeout(() => {
+            if (typeof map !== "undefined") {
+              map.invalidateSize();
+            }
+          }, 200);
+        }
+
+        // For the Content Writer Area step, update the read-only copy
+        if (stepId === "contentWriterAreaStep") {
+          updateContentWriterArea();
+        }
+      }
+
+      // New function: clone the rundown details into the Content Writer Area in read-only mode
+      function updateContentWriterArea() {
+        const rundownContainer = document.getElementById(
+          "rundownDetailsContainer"
+        );
+        const contentCopy = document.getElementById("contentWriterCopy");
+        // Clone the rundown container and all its children
+        const clone = rundownContainer.cloneNode(true);
+        // Remove the id attribute from the clone to avoid duplicates
+        clone.removeAttribute("id");
+        // Clear any previous content and append the clone
+        contentCopy.innerHTML = "";
+        contentCopy.appendChild(clone);
+        // Disable all inputs, textareas, and buttons within the clone
+        const inputs = contentCopy.querySelectorAll("input, textarea, button");
+        inputs.forEach((el) => {
+          el.disabled = true;
+          if (el.tagName.toLowerCase() === "button") {
+            el.style.display = "none";
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        showStep(0);
+
+        const stepLinks = document.querySelectorAll(".step-link");
+        stepLinks.forEach((link, idx) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            currentStepIndex = idx;
+            showStep(currentStepIndex);
+          });
+        });
+
+        const nextOrSaveBtn = document.getElementById("nextOrSaveBtn");
+        nextOrSaveBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          if (currentStepIndex < stepIds.length - 1) {
+            currentStepIndex++;
+            showStep(currentStepIndex);
+          } else {
+            if (!validateCurrentStep()) return;
+            await submitForm();
+          }
+        });
+      });
+
+      // Final validation on submission only (allows tab switching even if fields are missing)
+      function validateCurrentStep() {
+        const formMessage = document.getElementById("formMessage");
+        formMessage.style.display = "none";
+        const currentStepId = stepIds[currentStepIndex];
+        const currentStepDiv = document.getElementById(currentStepId);
+        let valid = true;
+        if (currentStepId === "tourDetailsStep") {
+          const nameInput = currentStepDiv.querySelector("#name");
+          const locationInput = currentStepDiv.querySelector("#location");
+          [nameInput, locationInput].forEach((input) => {
+            if (!input.value.trim()) {
+              input.classList.add("is-invalid");
+              valid = false;
+            } else {
+              input.classList.remove("is-invalid");
+            }
+          });
+          const rundownDetails =
+            currentStepDiv.querySelectorAll(".rundown-detail");
+          if (rundownDetails.length === 0) {
+            formMessage.textContent = "Please add at least one Rundown Detail.";
+            formMessage.className = "error-message";
+            formMessage.style.display = "block";
+            valid = false;
+          } else {
+            rundownDetails.forEach((detail) => {
+              const title = detail.querySelector(".rundown-title");
+              const duration = detail.querySelector(".rundown-duration");
+              const description = detail.querySelector(".rundown-description");
+              if (!title.value.trim()) {
+                title.classList.add("is-invalid");
+                valid = false;
+              } else {
+                title.classList.remove("is-invalid");
+              }
+              if (!duration.value.trim()) {
+                duration.classList.add("is-invalid");
+                valid = false;
+              } else {
+                duration.classList.remove("is-invalid");
+              }
+              if (!description.value.trim()) {
+                description.classList.add("is-invalid");
+                valid = false;
+              } else {
+                description.classList.remove("is-invalid");
+              }
+            });
+          }
+          const durationHours = document.getElementById("duration_hours").value;
+          const durationMinutes =
+            document.getElementById("duration_minutes").value;
+          if (
+            parseInt(durationHours) === 0 &&
+            parseInt(durationMinutes) === 0
+          ) {
+            document
+              .getElementById("duration_hours")
+              .classList.add("is-invalid");
+            document
+              .getElementById("duration_minutes")
+              .classList.add("is-invalid");
+            formMessage.textContent =
+              "Please enter either hours or minutes for the duration.";
+            formMessage.className = "error-message";
+            formMessage.style.display = "block";
+            valid = false;
+          } else {
+            document
+              .getElementById("duration_hours")
+              .classList.remove("is-invalid");
+            document
+              .getElementById("duration_minutes")
+              .classList.remove("is-invalid");
+          }
+          const indefiniteToggle = currentStepDiv.querySelector(
+            "#indefinite_availability"
+          );
+          const startDateInput = currentStepDiv.querySelector("#start_date");
+          const endDateInput = currentStepDiv.querySelector("#end_date");
+          if (!indefiniteToggle.checked) {
+            if (!startDateInput.value.trim()) {
+              startDateInput.classList.add("is-invalid");
+              valid = false;
+            } else {
+              startDateInput.classList.remove("is-invalid");
+            }
+            if (!endDateInput.value.trim()) {
+              endDateInput.classList.add("is-invalid");
+              valid = false;
+            } else {
+              endDateInput.classList.remove("is-invalid");
+            }
+          }
+          const timeSlotInputs =
+            currentStepDiv.querySelectorAll(".time-slot-input");
+          if (timeSlotInputs.length === 0) {
+            formMessage.textContent =
+              "Please add at least one Available Time Slot.";
+            formMessage.className = "error-message";
+            formMessage.style.display = "block";
+            valid = false;
+          } else {
+            timeSlotInputs.forEach((input) => {
+              if (!input.value.trim()) {
+                input.classList.add("is-invalid");
+                valid = false;
+              } else {
+                input.classList.remove("is-invalid");
+              }
+            });
+          }
+        }
+        return valid;
+      }
+
+      async function submitForm() {
+        const formMessage = document.getElementById("formMessage");
+        formMessage.style.display = "none";
+        const formElement = document.getElementById("addTourForm");
+        const rundownDetailsContainer = document.getElementById(
+          "rundownDetailsContainer"
+        );
+        const rundownDetails = [];
+        rundownDetailsContainer
+          .querySelectorAll(".rundown-detail")
+          .forEach((detail) => {
+            const title = detail.querySelector(".rundown-title").value.trim();
+            const duration =
+              parseInt(
+                detail.querySelector(".rundown-duration").value.trim()
+              ) || 0;
+            const description = detail
+              .querySelector(".rundown-description")
+              .value.trim();
+            rundownDetails.push({ title, duration, description });
+          });
+        const generalDescriptionInput = formElement.querySelector(
+          "#general_description"
+        );
+        generalDescriptionInput.value = JSON.stringify(rundownDetails);
+        const formData = new FormData(formElement);
+        const params = new URLSearchParams(window.location.search);
+        const tourId = params.get("id");
+        const endpoint = tourId ? `${API_BASE_URL}/tours/${tourId}` : `${API_BASE_URL}/tours`;
+        const method = tourId ? "PUT" : "POST";
+        formData.append(
+          "indefinite_availability",
+          document.getElementById("indefinite_availability").checked ? 1 : 0
+        );
+        formData.append(
+          "is_additional_name_required",
+          document.getElementById("isAdditionalNameRequired").checked ? 1 : 0
+        );
+        formData.append(
+          "is_additional_email_required",
+          document.getElementById("isAdditionalEmailRequired").checked ? 1 : 0
+        );
+        formData.append(
+          "is_additional_dob_required",
+          document.getElementById("isAdditionalDobRequired").checked ? 1 : 0
+        );
+        formData.append("itinerary_points", JSON.stringify(itineraryPoints));
+        formData.append(
+          "private_tour",
+          document.getElementById("tourTypeToggle").checked ? 1 : 0
+        );
+        const slots = [...document.querySelectorAll(".time-slot-input")].map(
+          (input) => ({
+            time: input.value,
+            day_of_week:
+              input.closest(".input-group").querySelector(".day-of-week")
+                ?.value || null,
+            specific_date:
+              input.closest(".input-group").querySelector(".specific-date")
+                ?.value || null,
+          })
+        );
+        formData.append("time_slots", JSON.stringify(slots));
+        const blackoutDays = [
+          ...document.querySelectorAll(".blackout-day-input"),
+        ].map((input) => ({ date: input.value }));
+        formData.append("blackout_days", JSON.stringify(blackoutDays));
+
+        try {
+          const response = await fetch(endpoint, { method, body: formData });
+          if (response.ok) {
+            const result = await response.json();
+            formMessage.textContent = `Tour ${
+              tourId ? "updated" : "added"
+            } successfully!`;
+            formMessage.className = "success-message";
+            formMessage.style.display = "block";
+            if (!tourId) {
+              formElement.reset();
+              itineraryPoints = [];
+              document.getElementById("itineraryList").innerHTML = "";
+              document.getElementById("timeSlotsContainer").innerHTML = "";
+              document.getElementById("blackoutDaysContainer").innerHTML = "";
+              rundownDetailsContainer.innerHTML = "";
+              rundownDetailsContainer.appendChild(createRundownDetail());
+              updateTourTypeLabel();
+              const meetingLocationInput =
+                document.getElementById("meetingLocation");
+              meetingLocationInput.disabled = false;
+              meetingLocationInput.value = "";
+              currentStepIndex = 0;
+              showStep(currentStepIndex);
+            }
+          } else {
+            const error = await response.json();
+            formMessage.textContent = `Error: ${
+              error.message || "Unknown error"
+            }`;
+            formMessage.className = "error-message";
+            formMessage.style.display = "block";
+          }
+        } catch (err) {
+          console.error("Request Error:", err);
+          formMessage.textContent = `Error: ${err.message || "Unknown error"}`;
+          formMessage.className = "error-message";
+          formMessage.style.display = "block";
+        }
+      }
+
+      function createRundownDetail() {
+        const rundownDetailDiv = document.createElement("div");
+        rundownDetailDiv.className = "rundown-detail border p-3 mb-3";
+        rundownDetailDiv.innerHTML = `
+          <div class="row mb-2">
+            <div class="col-md-4">
+              <label class="form-label">Title</label>
+              <input type="text" class="form-control rundown-title" placeholder="Enter title" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Duration (Hours)</label>
+              <input type="number" class="form-control rundown-duration" placeholder="Enter duration in hours" min="0" required />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button type="button" class="btn btn-danger remove-rundown-detail">Remove</button>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Description</label>
+            <textarea class="form-control rundown-description" rows="4" placeholder="Provide the rundown description..." required></textarea>
+          </div>
+        `;
+        rundownDetailDiv
+          .querySelector(".remove-rundown-detail")
+          .addEventListener("click", () => {
+            rundownDetailsContainer.removeChild(rundownDetailDiv);
+          });
+        return rundownDetailDiv;
+      }
+
+      function updateTourTypeLabel() {
+        const tourTypeToggle = document.getElementById("tourTypeToggle");
+        const tourTypeLabel = document.getElementById("tourTypeLabel");
+        tourTypeLabel.textContent = tourTypeToggle.checked
+          ? "Private Tour"
+          : "Small Group Tour";
+      }
+    </script>
+
+    <script>
+      let itineraryPoints = [];
+      const map = L.map("map").setView([47.5596, 7.5886], 13); // Basel coordinates
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+      const geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+      })
+        .on("markgeocode", function (e) {
+          const bbox = e.geocode.bbox;
+          const poly = L.polygon([
+            [bbox.getSouthEast().lat, bbox.getSouthEast().lng],
+            [bbox.getNorthEast().lat, bbox.getNorthEast().lng],
+            [bbox.getNorthWest().lat, bbox.getNorthWest().lng],
+            [bbox.getSouthWest().lat, bbox.getSouthWest().lng],
+          ]);
+          map.fitBounds(poly.getBounds());
+        })
+        .addTo(map);
+      const addPointButton = document.getElementById("addPoint");
+      let addPointMode = false;
+      addPointButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        addPointMode = !addPointMode;
+        if (addPointMode) {
+          addPointButton.textContent = "Click to Add Points";
+          map.getContainer().style.cursor = "crosshair";
+        } else {
+          addPointButton.textContent = "Add a Point";
+          map.getContainer().style.cursor = "";
+        }
+      });
+      map.on("click", (e) => {
+        if (addPointMode) {
+          const { lat, lng } = e.latlng;
+          itineraryPoints.push([lat, lng]);
+          L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(`Point ${itineraryPoints.length}`)
+            .openPopup();
+          const itineraryList = document.getElementById("itineraryList");
+          const listItem = document.createElement("li");
+          listItem.textContent = `Point ${
+            itineraryPoints.length
+          }: (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+          itineraryList.appendChild(listItem);
+        }
+      });
+      const meetingLocationInput = document.getElementById("meetingLocation");
+      const tourTypeToggle = document.getElementById("tourTypeToggle");
+      tourTypeToggle.addEventListener("change", () => {
+        const isPrivateTour = tourTypeToggle.checked;
+        meetingLocationInput.disabled = isPrivateTour;
+        meetingLocationInput.value = isPrivateTour
+          ? "Provided by customer"
+          : "";
+        updateTourTypeLabel();
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        const isPrivateTour = tourTypeToggle.checked;
+        meetingLocationInput.disabled = isPrivateTour;
+        meetingLocationInput.value = isPrivateTour
+          ? "Provided by customer"
+          : "";
+      });
+    </script>
+
+    <script>
+      const startDatePicker = flatpickr("#start_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        onChange: function (selectedDates, dateStr, instance) {
+          endDatePicker.set("minDate", dateStr);
+        },
+      });
+      const endDatePicker = flatpickr("#end_date", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        onChange: function (selectedDates, dateStr, instance) {
+          startDatePicker.set("maxDate", dateStr);
+        },
+      });
+      const indefiniteToggle = document.getElementById(
+        "indefinite_availability"
+      );
+      const startDateInput = document.getElementById("start_date");
+      const endDateInput = document.getElementById("end_date");
+      indefiniteToggle.addEventListener("change", () => {
+        const isIndefinite = indefiniteToggle.checked;
+        startDateInput.disabled = isIndefinite;
+        endDateInput.disabled = isIndefinite;
+        if (isIndefinite) {
+          startDateInput.value = "";
+          endDateInput.value = "";
+        }
+      });
+    </script>
+
+    <script>
+      const timeSlotsContainer = document.getElementById("timeSlotsContainer");
+      const addTimeSlotButton = document.getElementById("addTimeSlot");
+      addTimeSlotButton.addEventListener("click", () => {
+        const slotDiv = document.createElement("div");
+        slotDiv.className = "input-group mb-2";
+        const isIndefinite = document.getElementById(
+          "indefinite_availability"
+        ).checked;
+        slotDiv.innerHTML = `
+          <input type="time" class="form-control time-slot-input" placeholder="Time" required>
+          ${
+            isIndefinite
+              ? `<select class="form-control day-of-week">
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+              </select>`
+              : `<input type="date" class="form-control specific-date" placeholder="Date" required>`
+          }
+          <button type="button" class="btn btn-danger remove-slot">Remove</button>
+        `;
+        timeSlotsContainer.appendChild(slotDiv);
+      });
+      timeSlotsContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-slot")) {
+          e.target.closest(".input-group").remove();
+        }
+      });
+    </script>
+
+    <script>
+      const blackoutDaysContainer = document.getElementById(
+        "blackoutDaysContainer"
+      );
+      const addBlackoutDayButton = document.getElementById("addBlackoutDay");
+      addBlackoutDayButton.addEventListener("click", () => {
+        const div = document.createElement("div");
+        div.className = "input-group mb-2";
+        div.innerHTML = `
+          <input type="date" class="form-control blackout-day-input" placeholder="YYYY-MM-DD" required>
+          <button type="button" class="btn btn-danger remove-blackout-day">Remove</button>
+        `;
+        blackoutDaysContainer.appendChild(div);
+      });
+      blackoutDaysContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-blackout-day")) {
+          e.target.closest(".input-group").remove();
+        }
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const locationButtons = document.querySelectorAll(
+          ".btn-group .btn-outline-primary"
+        );
+        const hiddenLocationInput = document.getElementById("location");
+        locationButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            locationButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+            hiddenLocationInput.value = button.getAttribute("data-location");
+          });
+        });
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const rundownDetailsContainer = document.getElementById(
+          "rundownDetailsContainer"
+        );
+        const addRundownDetailButton =
+          document.getElementById("addRundownDetail");
+        function createRundownDetail() {
+          const rundownDetailDiv = document.createElement("div");
+          rundownDetailDiv.className = "rundown-detail border p-3 mb-3";
+          rundownDetailDiv.innerHTML = `
+            <div class="row mb-2">
+              <div class="col-md-4">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control rundown-title" placeholder="Enter title" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Duration (Hours)</label>
+                <input type="number" class="form-control rundown-duration" placeholder="Enter duration in hours" min="0" required />
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button type="button" class="btn btn-danger remove-rundown-detail">Remove</button>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Description</label>
+              <textarea class="form-control rundown-description" rows="4" placeholder="Provide the rundown description..." required></textarea>
+            </div>
+          `;
+          rundownDetailDiv
+            .querySelector(".remove-rundown-detail")
+            .addEventListener("click", () => {
+              rundownDetailsContainer.removeChild(rundownDetailDiv);
+            });
+          return rundownDetailDiv;
+        }
+        addRundownDetailButton.addEventListener("click", () => {
+          const newRundownDetail = createRundownDetail();
+          rundownDetailsContainer.appendChild(newRundownDetail);
+        });
+        document
+          .querySelectorAll(".remove-rundown-detail")
+          .forEach((button) => {
+            button.addEventListener("click", (e) => {
+              const rundownDetailDiv = e.target.closest(".rundown-detail");
+              if (rundownDetailDiv) {
+                rundownDetailsContainer.removeChild(rundownDetailDiv);
+              }
+            });
+          });
+      });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Register script -->
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Registration successful!");
+              e.target.reset();
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("registerModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Registration failed.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Login script -->
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // Successful login
+              console.log("Login successful:", result);
+              localStorage.setItem("token", result.token);
+              localStorage.setItem("user", JSON.stringify(result.user));
+              updateAuthState(); // Update sidebar UI
+              alert("Login successful!");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("loginModal")
+              );
+              modal.hide();
+            } else {
+              // Login failed
+              console.error("Login failed:", result);
+              alert(result.error || "Invalid login credentials.");
+            }
+          } catch (error) {
+            console.error("An error occurred during login:", error);
+            alert("An error occurred. Please try again later.");
+          }
+        });
+    </script>
+
+    <!-- Forgot pw script -->
+    <script>
+      document
+        .getElementById("forgotPasswordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("forgotEmail").value;
+
+          try {
+            const response = await fetch(
+              `${API_BASE_URL}/users/forgot-password`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+              }
+            );
+
+            const result = await response.json();
+            if (response.ok) {
+              alert("Password reset link sent to your email.");
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("forgotPasswordModal")
+              );
+              modal.hide();
+            } else {
+              alert(result.message || "Failed to send reset link.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred.");
+          }
+        });
+    </script>
+
+    <!-- Sidebar update script -->
+    <script>
+      function updateAuthState() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authBtn = document.getElementById("authBtn");
+        const userWelcome = document.getElementById("userWelcome");
+        const registerBtn = document.getElementById("registerBtn"); // Reference to the Register button
+
+        if (user) {
+          // User is logged in
+          authBtn.textContent = "Logout";
+          authBtn.classList.remove("btn-secondary");
+          authBtn.classList.add("btn-danger");
+          authBtn.removeAttribute("data-bs-toggle");
+          authBtn.removeAttribute("data-bs-target");
+
+          // Disable and gray out the Register button
+          registerBtn.disabled = true;
+          registerBtn.style.pointerEvents = "none"; // Prevent clicks
+          registerBtn.style.backgroundColor = "#6c757d"; // Gray background
+          registerBtn.style.borderColor = "#6c757d"; // Match border color
+          registerBtn.style.cursor = "not-allowed"; // Show "not allowed" cursor
+          registerBtn.textContent = "Register"; // Optional: Update text
+          registerBtn.removeAttribute("data-bs-toggle");
+          registerBtn.removeAttribute("data-bs-target");
+
+          // Add Welcome message and Reset Password link
+          userWelcome.innerHTML = `
+                <div>Welcome, ${user.name}!</div>
+                <a href="#" class="text-white mt-2 d-block" id="resetPasswordLink">Reset Password</a>
+            `;
+        } else {
+          // User is logged out
+          authBtn.textContent = "Login";
+          authBtn.classList.remove("btn-danger");
+          authBtn.classList.add("btn-secondary");
+          authBtn.setAttribute("data-bs-toggle", "modal");
+          authBtn.setAttribute("data-bs-target", "#loginModal");
+
+          // Enable and restore the Register button
+          registerBtn.disabled = false;
+          registerBtn.style.pointerEvents = "auto"; // Re-enable clicks
+          registerBtn.style.backgroundColor = ""; // Restore default
+          registerBtn.style.borderColor = ""; // Restore default
+          registerBtn.style.cursor = ""; // Restore default cursor
+          registerBtn.textContent = "Register"; // Restore default text
+          registerBtn.setAttribute("data-bs-toggle", "modal");
+          registerBtn.setAttribute("data-bs-target", "#registerModal");
+
+          userWelcome.textContent = "";
+        }
+      }
+
+      // Add logout functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+      });
+    </script>
+
+    <!-- Reset pw for logged user script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        updateAuthState();
+
+        // Add logout functionality
+        document.getElementById("authBtn").addEventListener("click", (e) => {
+          if (localStorage.getItem("user")) {
+            // Logout if user is logged in
+            localStorage.clear();
+            updateAuthState();
+          }
+        });
+
+        // Add event listener for Reset Password link
+        document
+          .getElementById("userWelcome")
+          .addEventListener("click", (e) => {
+            if (e.target.id === "resetPasswordLink") {
+              const resetPasswordModal = new bootstrap.Modal(
+                document.getElementById("resetPasswordModal")
+              );
+              resetPasswordModal.show();
+            }
+          });
+
+        // Handle Reset Password form submission
+        document
+          .getElementById("resetPasswordForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById("newPassword").value;
+            const token = localStorage.getItem("token"); // Use the stored token for authentication
+
+            try {
+              const response = await fetch(
+                `${API_BASE_URL}/users/reset-password`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({ newPassword }),
+                }
+              );
+
+              const result = await response.json();
+              if (response.ok) {
+                alert("Password reset successfully!");
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("resetPasswordModal")
+                );
+                modal.hide();
+              } else if (result.errors) {
+                // Display validation errors
+                alert(result.errors.map((err) => err.msg).join("\n"));
+              } else {
+                alert(result.message || "Password reset failed.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("An error occurred.");
+            }
+          });
+      });
+
+      // Switch from register to login modal
+      document
+        .getElementById("switchToLogin")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+
+          // Close the Register Modal
+          const registerModal = bootstrap.Modal.getInstance(
+            document.getElementById("registerModal")
+          );
+          registerModal.hide();
+
+          // Open the Login Modal
+          const loginModal = new bootstrap.Modal(
+            document.getElementById("loginModal")
+          );
+          loginModal.show();
+        });
+    </script>
+  </body>
+</html>
