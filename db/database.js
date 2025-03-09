@@ -1,16 +1,16 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
-const dbPath = path.resolve(__dirname, 'database.sqlite');
+const dbPath = path.resolve(__dirname, "database.sqlite");
 const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) console.error(err.message);
-    else console.log('Connected to SQLite database.');
+  if (err) console.error(err.message);
+  else console.log("Connected to SQLite database.");
 });
 
 // Initialize tables
 db.serialize(() => {
-    // Create tours table
-    db.run(`
+  // Create tours table
+  db.run(`
         CREATE TABLE IF NOT EXISTS tours (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -19,29 +19,28 @@ db.serialize(() => {
             location TEXT,
             duration_hours INTEGER,
             duration_minutes INTEGER,
+            image TEXT,
             what_to_bring TEXT,
             know_before TEXT,
             questions TEXT,
-            image TEXT,
             private_tour INTEGER DEFAULT 0,
             meeting_location TEXT,
-            time_slots TEXT,
+            indefinite_availability INTEGER,
             start_date TEXT,
             end_date TEXT,
-            indefinite_availability INTEGER,
-            max_capacity INTEGER,
+            time_slots TEXT,
             guide_rate REAL DEFAULT 0,
             ticket_cost REAL DEFAULT 0,
             vehicle_cost REAL DEFAULT 0,
+            max_capacity INTEGER,
             is_additional_name_required INTEGER DEFAULT 0,
             is_additional_email_required INTEGER DEFAULT 0,
             is_additional_dob_required INTEGER DEFAULT 0
         );
     `);
-    
 
-     // Create itinerary_points table
-     db.run(`
+  // Create itinerary_points table
+  db.run(`
         CREATE TABLE IF NOT EXISTS itinerary_points (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
@@ -51,8 +50,8 @@ db.serialize(() => {
         );
     `);
 
-    // Create time_slots table
-    db.run(`
+  // Create time_slots table
+  db.run(`
         CREATE TABLE IF NOT EXISTS time_slots (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
@@ -64,8 +63,8 @@ db.serialize(() => {
 
     `);
 
-    // Create bookings table
-    db.run(`
+  // Create bookings table
+  db.run(`
         CREATE TABLE IF NOT EXISTS bookings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -83,10 +82,11 @@ db.serialize(() => {
         );
     `);
 
-    db.run(`
+  db.run(`
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            firstname TEXT NOT NULL,
+            lastname TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             role TEXT DEFAULT 'customer', -- Roles: customer, admin, travel_agent
@@ -96,7 +96,7 @@ db.serialize(() => {
         );
     `);
 
-    db.run(`
+  db.run(`
         CREATE TABLE IF NOT EXISTS blackout_days (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tour_id INTEGER NOT NULL,
@@ -104,7 +104,6 @@ db.serialize(() => {
             FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
         );
     `);
-    
 });
 
 module.exports = db;

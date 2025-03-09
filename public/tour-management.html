@@ -1043,7 +1043,9 @@
           const tourId = getQueryParam("id");
 
           // Set the API endpoint and HTTP method dynamically based on tourId
-          const endpoint = tourId ? `${API_BASE_URL}/tours/${tourId}` : `${API_BASE_URL}/tours`;
+          const endpoint = tourId
+            ? `${API_BASE_URL}/tours/${tourId}`
+            : `${API_BASE_URL}/tours`;
           //const endpoint = tourId ? `/api/tours/${tourId}` : "/api/tours";
           const method = tourId ? "PUT" : "POST";
 

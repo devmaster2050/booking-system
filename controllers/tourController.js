@@ -366,7 +366,7 @@ const updateTour = (req, res) => {
       ? 1
       : 0;
 
-      const parsedPrivateTour = parseInt(private_tour) || 0;
+  const parsedPrivateTour = parseInt(private_tour) || 0;
 
   const query = `
         UPDATE tours 

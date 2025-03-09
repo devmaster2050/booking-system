@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -29,12 +29,12 @@ exports.register = async (req, res) => {
     });
 
     const query = `
-            INSERT INTO users (name, email, password, verification_token) 
-            VALUES (?, ?, ?, ?)
+            INSERT INTO users (firstname, lastname, email, password, verification_token) 
+            VALUES (?, ?, ?, ?, ?)
         `;
     db.run(
       query,
-      [name, email, hashedPassword, verificationToken],
+      [firstname, lastname, email, hashedPassword, verificationToken],
       function (err) {
         if (err) {
           console.error(err.message);
@@ -50,12 +50,11 @@ exports.register = async (req, res) => {
           subject: "Verify Your Account",
           html: `<p>Please verify your email by clicking <a href="${verificationUrl}">here</a>.</p>`,
         });
+        console.log("After transporter");
 
-        res
-          .status(201)
-          .json({
-            message: "Registration successful. Please verify your email.",
-          });
+        res.status(201).json({
+          message: "Registration successful. Please verify your email.",
+        });
       }
     );
   } catch (error) {
@@ -113,15 +112,60 @@ exports.login = (req, res) => {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "2d" }
     );
 
     // Send token and user details to the frontend
     res.json({
-      token,
-      user: { name: user.name, email: user.email },
+      token: "Bearer " + token,
+      user: {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+      },
     });
   });
+};
+
+// Check Authenticated User
+exports.checkAuthenticated = (req, res) => {
+  console.log("token: ", req.body.token);
+  const token = req.body.token.split(" ")[1];
+  console.log("token: ", token);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const { id, iat, exp } = decoded;
+
+  console.log("id: ", id);
+  const query = `SELECT * FROM users WHERE id = ?`;
+  console.log("query: ", query);
+
+  db.get(query, [id], async (err, user) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: "Login failed." });
+    }
+
+    if (iat - exp >= 0) {
+      return res.status(400).json({ error: "Invalid or expired token." });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" }
+    );
+
+    // Send token and user details to the frontend
+    res.json({
+      token: "Bearer " + token,
+      user: {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  }); //*/
 };
 
 // Forgot Password
@@ -136,7 +180,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Generate reset token (expires in 1 hour)
     const resetToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "2d",
     });
 
     // Store token in the database
